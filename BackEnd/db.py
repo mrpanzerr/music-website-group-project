@@ -13,6 +13,7 @@ db_name = 'play_back_db'
 
 engine = create_engine(f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}")
 
+
 #with engine.connect() as conn:
     #conn.execute(text("CREATE TABLE Comments (commentID INT AUTO_INCREMENT UNIQUE PRIMARY KEY,
     #                                       content VARCHAR(280) NOT NULL,
