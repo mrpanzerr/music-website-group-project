@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 
 //Component that takes a search value from an input and returns a list with 5 data objects
 export default function GetData() {
-    //
-    const [data,setData] = useState<{name : string, image: string, type: string }[]>([]);
+    const [data,setData] = useState<{name : string, image: string, type: string, artist : string[], id : string, album : string}[]>([]);
     const [search, setSearch] = useState("");
     const [type, setType] = useState("artist");
 
@@ -18,8 +17,6 @@ export default function GetData() {
         }).then(res => res.json()).then(
             responseData => {
                 setData(responseData);
-                console.log(responseData);
-                console.log(type)
             }
         ).catch(error => console.error('Error fetching data:', error));
     }, [search,type]);
@@ -34,8 +31,10 @@ export default function GetData() {
                 <input type="text" value = {search} onChange={(e) => setSearch(e.target.value)}></input>
             </form>
             <ul className = "list-group">
-                {data && data.map((items, index) => (
-                    <li key= {index}className = "list-group-item">{items.name} <img src={items.image == "" && items.type != "track" ? "images/no_result.png" : items.type == "track" ? "images/null.png":  items.image}></img> {items.type}</li>
+                {data && data.map((item, index) => (
+                    item.type == "track" ? <li className="list-group-item" key = {index}>{item.name} {item.artist} <img src={item.album}></img></li> :
+                    item.type == "artist" ? <li className="list-group-item" key = {index}>{item.name} <img src={item.image}></img></li> :
+                    <li className="list-group-item" key = {index}>{item.name} {item.artist} <img src= {item.image}></img> </li> 
                 ))}
             </ul>
         </>

@@ -43,8 +43,14 @@ def general_search(token, search, type, limit):
         #Puts data found into a dictionary with Name:(artist/track/album), image: pic if it exists, and type: type of media
         results_list = [{"name": item.get("name", "NoName"),
                          "image" : item["images"][-1]["url"] if isinstance(item.get("images"), list) and item["images"] else "",
-                         "type" : type} for item in json_result]
+                         "type" : type,
+                         "artist" : [artist.get("name", '') for artist in item.get("artists", [{}])],
+                         "id" : item.get("id", ""),
+                         "album" : item.get("album", {}).get("images",[{"url" : "images/no_result.png"}])[-1].get("url","")} for item in json_result]
         return results_list
+    
+token = get_token()
+print(general_search(token,"ara", "track", 1))
     
 
 
