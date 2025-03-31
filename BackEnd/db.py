@@ -5,17 +5,24 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-db_password = os.getenv("DB_PASSWORD")
-db_user = 'root'
-db_host = '127.0.0.1'
+# db_password = os.getenv("DB_PASSWORD")
+# db_user = 'root'
+# db_host = '127.0.0.1'
+# db_port = '3306'
+# db_name = 'play_back_db'
+db_password = os.getenv("IFDB_PASSWORD")
+db_user = 'if0_38557428'
+db_host = 'sql306.infinityfree.com'
 db_port = '3306'
-db_name = 'play_back_db'
+db_name = 'if0_38557428_play_back'
+
 
 engine = create_engine(f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}")
 
 
-#with engine.connect() as conn:
-    #conn.execute(text("CREATE TABLE Comments (commentID INT AUTO_INCREMENT UNIQUE PRIMARY KEY,
+with engine.connect() as conn:
+    #conn.execute(text("CREATE TABLE Comments (commentID INT AUTO_INCREMENT UNIQUE PRIMARY KEY, content VARCHAR(280) NOT NULL, datecommented DATETIME NOT NULL, postID INT, parentcommentID INT, userID INT, FOREIGN KEY (postID) REFERENCES POSTS(postID), FOREIGN KEY (parentcommentID) REFERENCES Comments(commentID), FOREIGN KEY (userID) REFERENCES Users(userID), CHECK (postID IS NOT NULL OR parentcommentID IS NOT NULL))"))
+    # conn.execute(text("CREATE TABLE Comments (commentID INT AUTO_INCREMENT UNIQUE PRIMARY KEY,
     #                                       content VARCHAR(280) NOT NULL,
     #                                       datecommented DATETIME NOT NULL,
     #                                       postID INT,
@@ -38,6 +45,6 @@ engine = create_engine(f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_p
     #                                       datejoined DATETIME NOT NULL,
     #                                       bio VARCHAR(300) DEFAULT 'No bio.',
     #                                       profilepicturepath VARCHAR(300) DEFAULT 'none.jpg')"))
-    #conn.execute(text("CREATE TABLE Song (songID INT NOT NULL UNIQUE PRIMARY KEY)"))
+    conn.execute(text("CREATE TABLE Songs (songID INT NOT NULL UNIQUE PRIMARY KEY)"))
 
 
