@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SignUpForm from './create_acct_form.tsx';
 
 function SignUp() {
@@ -7,6 +8,8 @@ function SignUp() {
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
   const [error, setError] = useState<{ [key: string]: string }>({});
+  
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,10 +32,9 @@ function SignUp() {
 
       const data = await response.json();
       if (response.ok) {
-        console.log('User signed up:', data);
         setPassword1('');
         setPassword2('');
-        console.log("Success");
+		navigate('/acct_created');
       } else {
         setError({ api: data.error || 'Something went wrong.' });
       }

@@ -1,4 +1,4 @@
-from flask import Flask ,request, jsonify
+from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from main import general_search, get_token, get_auth_header
@@ -22,26 +22,37 @@ def search():
 
 @app.route('/signup', methods=['POST'])
 def signup():
-    data = request.get_json()
+    try :
+        # Get the JSON data from the request
+        data = request.get_json()
 
-    email = data.get('email')
-    username = data.get('username')
-    password = data.get('password')
+        # Extract the email, username, and password
+        email = data.get('email')
+        username = data.get('username')
+        password = data.get('password')
 
-    if not email or not username or not password:
-        return jsonify({'error': 'All fields are required'}), 400
+        # Check if any of the required fields are missing
+        if not email or not username or not password:
+            return jsonify({'error': 'All fields are required'}), 400
 
-    # Basic email format validation
-    if '@' not in email:
-        return jsonify({'error': 'Invalid email format'}), 400
+        # Basic email format validation
+        if '@' not in email:
+            return jsonify({'error': 'Invalid email format'}), 400
 
-    # Hash password
-    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        # Hash the password using bcrypt
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        
+        # track session for proper content display, posting, tags, etc.
+        
+        # Insert user into the database (you'll need to set this part up)
+        # insert_user_into_db(email, username, hashed_password)
 
-    # Insert user into database
-    # need to set up database
-    # insert_user_into_db(email, username, hashed_password)
-    return jsonify({'message': 'User signed up successfully'}), 201
+        # If everything went well, return success message
+        return jsonify({'message': 'User signed up successfully'}), 201
+
+    except Exception as e:
+        # Catch any exception and return a 500 error with the exception message
+        return jsonify({'error': f'Internal server error: {str(e)}'}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
