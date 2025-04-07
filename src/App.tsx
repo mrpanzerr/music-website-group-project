@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import GetData from "./components/search_bar.tsx";
 import CreateAcctPage from "./FrontEnd/create_acct_page.tsx";
 import AcctCreatedPage from "./FrontEnd/acct_created_page.tsx";
+import LoginPage from "./FrontEnd/login_page.tsx";
 
 // Currently all it does is displays the ul from updated_search component
 // function App() {
@@ -24,6 +25,9 @@ function App() {
 					<li>
 						<Link to="/create_acct">Create Account</Link>
 					</li>
+					<li>
+						<Link to="/login_page">Login</Link>
+					</li>
 				</ul>
 			</nav>
 		</header>
@@ -33,6 +37,7 @@ function App() {
             <Route path="/" element={null} />
             <Route path="/create_acct" element={<CreateAcctPage />} />
             <Route path="/acct_created_page" element={<AcctCreatedPage />} />
+			<Route path="/login_page" element={<LoginPage />} />
           </Routes>
         </section>
       </div>
