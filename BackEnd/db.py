@@ -21,16 +21,17 @@ meta = MetaData()
 Songs = Table(
     "Songs",
     meta,
-    Column('songID', Integer, primary_key=True, autoincrement=True)
+    Column('songID', Integer, primary_key=True)
 )
 Users = Table(
     "Users",
     meta,
     Column('userID', Integer, primary_key=True, autoincrement=True),
     Column('username', String(20), unique=True, nullable=False),
-    Column('password', String(50), nullable=False),
+    Column('password', String(255), nullable=False),
     Column('date_joined', DateTime, default=datetime.utcnow),
-    Column('bio', String(200), default="No Bio")
+    Column('bio', String(200), default="No Bio"),
+    Column('email', String(100), unique=True, nullable=False)
 )
 Posts = Table(
     "Posts",
@@ -53,16 +54,19 @@ Comments = Table(
     Column('parent_commentID', Integer, ForeignKey('Comments.commentID'))
 )
 
-def insert_song(conn):
-    insert_statement = insert(Songs).values()
+def insert_song(conn, song_id):
+    insert_statement = insert(Songs).values(
+        songID = song_id
+    )
     result = conn.execute(insert_statement)
     conn.commit()
     return f"Song with ID:{result.inserted_primary_key[0]} inserted"
 
-def insert_user(conn, username, password):
+def insert_user(conn, username, password, email):
     insert_statement = insert(Users).values(
         username=username,
-        password=password
+        password=password,
+        email=email
     )
     result = conn.execute(insert_statement)
     conn.commit()
@@ -79,7 +83,7 @@ def insert_post(conn, user_id, song_id, header, content):
     conn.commit()
     return f"Post with ID: {result.inserted_primary_key[0]} inserted"
 
-def insert_comment(conn, user_id, post_id, content, parent_comment_id=None):
+def insert_comment(conn, user_id, content, post_id=None, parent_comment_id=None):
     insert_statement = insert(Comments).values(
         userID=user_id,
         postID=post_id,
@@ -89,5 +93,10 @@ def insert_comment(conn, user_id, post_id, content, parent_comment_id=None):
     result = conn.execute(insert_statement)
     conn.commit()
     return f"comment with ID: {result.inserted_primary_key[0]} inserted"
+
+
+if __name__ == "__main__":
+    with engine.connect() as conn:
+        insert_post(conn, 2, 1, "Test Header", "RANDOM BULLSHIT RANDOM BULLSHIT RANDOM BULLSHIT RANDOM BULLSHIT RANDOM BULLSHIT")
 
 

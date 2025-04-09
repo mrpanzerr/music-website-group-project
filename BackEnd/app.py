@@ -1,11 +1,24 @@
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
+from db import insert_user
 from flask_bcrypt import Bcrypt
 from main import general_search, get_token, get_auth_header
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, CHAR, MetaData, Table, DateTime, insert, text
 from datetime import datetime
+from dotenv import load_dotenv
 import json
+import os
 
+
+load_dotenv()
+db_password = os.getenv("DB_PASSWORD")
+db_user = 'root'
+db_host = '127.0.0.1'
+db_port = '3306'
+db_name = 'play_back_db'
+
+
+engine = create_engine(f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}", echo = True)
 token = get_token()
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -51,7 +64,8 @@ def signup():
         # Insert user into the database (we'll need to set this part up)
 #>>>>>>> a82af37f3ebd7d309788fa1edfffb76d0af0ca50
         # insert_user_into_db(email, username, hashed_password)
-
+        with engine.connect() as conn:
+            insert_user(conn, username, hashed_password, email)
         # If everything went well, return success message
         return jsonify({'message': 'User signed up successfully'}), 201
 
@@ -74,8 +88,8 @@ def login():
 
 
     # Check if the provided password matches the hashed one
-    if not check_password_hash(hashed_password, password):
-        return jsonify({"error": "Invalid email or password"}), 401
+    # if not check_password_hash(hashed_password, password):
+    #     return jsonify({"error": "Invalid email or password"}), 401
 
     return jsonify({"message": "Login successful!"}), 200
 
