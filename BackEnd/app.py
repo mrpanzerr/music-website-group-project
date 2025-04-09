@@ -45,6 +45,7 @@ def signup():
         # track session for proper content display, posting, tags, etc.
         
         # Insert user into the database (you'll need to set this part up)
+        
         # insert_user_into_db(email, username, hashed_password)
 
         # If everything went well, return success message
