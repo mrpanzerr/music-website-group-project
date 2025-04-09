@@ -40,12 +40,16 @@ def signup():
             return jsonify({'error': 'Invalid email format'}), 400
 
         # Hash the password using bcrypt
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8') # not a safe method. dont do this
         
         # track session for proper content display, posting, tags, etc.
         
+#<<<<<<< HEAD
         # Insert user into the database (you'll need to set this part up)
         
+#=======
+        # Insert user into the database (we'll need to set this part up)
+#>>>>>>> a82af37f3ebd7d309788fa1edfffb76d0af0ca50
         # insert_user_into_db(email, username, hashed_password)
 
         # If everything went well, return success message
@@ -54,6 +58,26 @@ def signup():
     except Exception as e:
         # Catch any exception and return a 500 error with the exception message
         return jsonify({'error': f'Internal server error: {str(e)}'}), 500
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+
+    email = data.get('email')
+    password = data.get('password')
+
+    # need database for checking user data
+    # Check if the user exists
+    
+
+    # Get the hashed password stored in the database
+
+
+    # Check if the provided password matches the hashed one
+    if not check_password_hash(hashed_password, password):
+        return jsonify({"error": "Invalid email or password"}), 401
+
+    return jsonify({"message": "Login successful!"}), 200
 
 if __name__ == "__main__":
     app.run(debug=True)
