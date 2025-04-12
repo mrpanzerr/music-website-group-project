@@ -5,11 +5,20 @@ from main import general_search, get_token, get_auth_header
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import json
+import requests
 
 token = get_token()
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 CORS(app)
+
+# Define User model for entering into database - needs to be updtaed to be consistent with database
+"""class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(128), nullable=False) """
+
 
 #If data is fetched from server URL + /search, this data is returned in json format.
 @app.route('/search', methods = ['POST'])
@@ -40,20 +49,31 @@ def signup():
             return jsonify({'error': 'Invalid email format'}), 400
 
         # Hash the password using bcrypt
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8') # not a safe method. dont do this
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         
-        # track session for proper content display, posting, tags, etc.
+        """
+        # Check if user already exists 
+        existing_user = User.query.filter_by(email=email).first()
         
-#<<<<<<< HEAD
-        # Insert user into the database (you'll need to set this part up)
+        if not user:
+            return jsonify({"error": "Email not found"}), 401
+
+        # Check if the password matches
+        if not bcrypt.check_password_hash(user.password, password):
+            return jsonify({"error": "Incorrect password"}), 401
         
-#=======
+        # Create a new user and add to the database
+        new_user = User(email=email, username=username, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit() 
+        """
+        
+        # If everything went well, return success message
+        return jsonify({'message': 'User signed up successfully'}), 201
+        
         # Insert user into the database (we'll need to set this part up)
 #>>>>>>> a82af37f3ebd7d309788fa1edfffb76d0af0ca50
         # insert_user_into_db(email, username, hashed_password)
-
-        # If everything went well, return success message
-        return jsonify({'message': 'User signed up successfully'}), 201
 
     except Exception as e:
         # Catch any exception and return a 500 error with the exception message
@@ -66,18 +86,65 @@ def login():
     email = data.get('email')
     password = data.get('password')
 
-    # need database for checking user data
-    # Check if the user exists
+    if not email or not password:
+        return jsonify({'error': 'Email and password are required'}), 400
+       
+    """
+    user = User.query.filter_by(email=email).first()
     
-
-    # Get the hashed password stored in the database
-
-
+    if not user or not bcrypt.check_password_hash(user.password, password):
+        return jsonify({"error": "Invalid email or password}), 401
+ 
     # Check if the provided password matches the hashed one
-    if not check_password_hash(hashed_password, password):
+    if not user or not bcrypt.check_password_hash(user.password, password):
         return jsonify({"error": "Invalid email or password"}), 401
+        
+    """
 
     return jsonify({"message": "Login successful!"}), 200
+
+@app.route('/artist/<id>', methods=['GET'])
+def get_artist(id):
+    if not id:
+        return jsonify({'error': 'Artist ID is required'}), 400
+
+    try:
+        headers = get_auth_header(token)
+        url = f"https://api.spotify.com/v1/artists/{id}"
+        response = requests.get(url, headers=headers)
+
+        if response.status_code == 200:
+            try:
+                data = response.json()  # Parse the JSON response
+                
+                # Check if 'name', 'id', and 'popularity' are returned
+                artist_name = data.get('name', 'Unknown')
+                artist_id = data.get('id', 'Unknown')
+                artist_genres = data.get('genres', [])
+                artist_popularity = data.get('popularity', 'Unknown')
+
+                # Handle empty genres array
+                if not artist_genres:
+                    artist_genres = ['No genres available']
+
+                # Format the artist info to return
+                artist_info = {
+                    "name": artist_name,
+                    "id": artist_id,
+                    "genres": artist_genres,
+                    "popularity": artist_popularity
+                }
+
+                return jsonify(artist_info)
+
+            except ValueError:
+                return jsonify({'error': 'Invalid JSON response from Spotify'}), 500
+        elif response.status_code == 404:
+            return jsonify({'error': 'Artist not found'}), 404
+        else:
+            return jsonify({'error': f'Error fetching artist data. Status code: {response.status_code}'}), 500
+    except Exception as e:
+        return jsonify({'error': f'Internal server error: {str(e)}'}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
