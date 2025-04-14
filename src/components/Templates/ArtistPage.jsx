@@ -5,6 +5,7 @@ import PageTemplate from './PageTemplate'; // Import the template
 const ArtistPage = () => {
     const { id } = useParams();  // Get the artist ID from the URL
     const [data, setData] = useState(null);
+    
 
     useEffect(() => {
 		fetch(`http://127.0.0.1:5000/artist/${id}`)

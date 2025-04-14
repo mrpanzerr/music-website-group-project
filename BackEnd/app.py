@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
-from main import general_search, get_token, get_auth_header
+from main import general_search, get_token, get_auth_header, artist_search, track_search, album_search
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import json
@@ -27,7 +27,7 @@ def search():
     search_value = data.get("search", "")
 
     #In this example, "radiohead" is being searched as an artist returning 5 results
-    return json.dumps(general_search(token, search_value, data.get("type", "artist"), 5))
+    return general_search(token, search_value, data.get("type", "artist"), 5)
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -108,43 +108,56 @@ def get_artist(id):
     if not id:
         return jsonify({'error': 'Artist ID is required'}), 400
 
-    try:
-        headers = get_auth_header(token)
-        url = f"https://api.spotify.com/v1/artists/{id}"
-        response = requests.get(url, headers=headers)
+    return artist_search(token,id)
 
-        if response.status_code == 200:
-            try:
-                data = response.json()  # Parse the JSON response
+@app.route('/album/<id>', methods=['GET'])
+def get_album(id):
+    if not id:
+        return jsonify({'error' : 'Album ID is required'}), 400
+
+    return album_search(token,id)
+@app.route('/track/<id>', methods=['GET'])
+def get_track(id):
+    if not id:
+        return jsonify({'error': 'Track ID is required'}), 400
+
+    return track_search(token,id)
+        # headers = get_auth_header(token)
+        # url = f"https://api.spotify.com/v1/artists/{id}"
+        # response = requests.get(url, headers=headers)
+
+        # if response.status_code == 200:
+        #     try:
+        #         data = response.json()  # Parse the JSON response
                 
-                # Check if 'name', 'id', and 'popularity' are returned
-                artist_name = data.get('name', 'Unknown')
-                artist_id = data.get('id', 'Unknown')
-                artist_genres = data.get('genres', [])
-                artist_popularity = data.get('popularity', 'Unknown')
+        #         # Check if 'name', 'id', and 'popularity' are returned
+        #         artist_name = data.get('name', 'Unknown')
+        #         artist_id = data.get('id', 'Unknown')
+        #         artist_genres = data.get('genres', [])
+        #         artist_popularity = data.get('popularity', 'Unknown')
 
-                # Handle empty genres array
-                if not artist_genres:
-                    artist_genres = ['No genres available']
+        #         # Handle empty genres array
+        #         if not artist_genres:
+        #             artist_genres = ['No genres available']
 
-                # Format the artist info to return
-                artist_info = {
-                    "name": artist_name,
-                    "id": artist_id,
-                    "genres": artist_genres,
-                    "popularity": artist_popularity
-                }
+        #         # Format the artist info to return
+        #         artist_info = {
+        #             "name": artist_name,
+        #             "id": artist_id,
+        #             "genres": artist_genres,
+        #             "popularity": artist_popularity
+        #         }
 
-                return jsonify(artist_info)
+        #         return jsonify(artist_info)
 
-            except ValueError:
-                return jsonify({'error': 'Invalid JSON response from Spotify'}), 500
-        elif response.status_code == 404:
-            return jsonify({'error': 'Artist not found'}), 404
-        else:
-            return jsonify({'error': f'Error fetching artist data. Status code: {response.status_code}'}), 500
-    except Exception as e:
-        return jsonify({'error': f'Internal server error: {str(e)}'}), 500
+    #         except ValueError:
+    #             return jsonify({'error': 'Invalid JSON response from Spotify'}), 500
+    #     elif response.status_code == 404:
+    #         return jsonify({'error': 'Artist not found'}), 404
+    #     else:
+    #         return jsonify({'error': f'Error fetching artist data. Status code: {response.status_code}'}), 500
+    # except Exception as e:
+    #     return jsonify({'error': f'Internal server error: {str(e)}'}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)

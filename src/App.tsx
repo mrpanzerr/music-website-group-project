@@ -6,8 +6,8 @@ import LoginPage from "../FrontEnd/login_page.tsx";
 import LoggedInPage from "./components/LoginLogout/logged_in";
 import LoggedOutPage from "./components/LoginLogout/logged_out";
 import ArtistPage from './components/Templates/ArtistPage';
-//import TrackPage from './components/Templates/TrackPage';
-//import AlbumPage from './components/Templates/AlbumPage';
+import TrackPage from './components/Templates/TrackPage';
+import AlbumPage from './components/Templates/AlbumPage';
 
 
 // Landing Page
@@ -46,8 +46,9 @@ function Layout() {
           <Route path="/logged_in" element={<LoggedInPage />} />
 		  <Route path="/logged_out" element={<LoggedOutPage />} />
 		  <Route path="/artist/:id" element={<ArtistPage />} />
-		  {/* <Route path="/track/:id" element={<TrackPage />} />
-		  <Route path="/album/:id" element={<AlbumPage />} /> */}
+		  <Route path="/track/:id" element={<TrackPage />} />
+		  <Route path="/album/:id" element={<AlbumPage />} />
+		  {/* <Route path="/album/:id" element={<AlbumPage />} /> */}
         </Routes>
       </section>
     </div>
