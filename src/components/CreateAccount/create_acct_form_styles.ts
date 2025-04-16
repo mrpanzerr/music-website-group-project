@@ -1,4 +1,26 @@
-// create_acct_form_styles.ts
+/**
+Author: Gaetano Panzer  
+Date: 4.4.25  
+Filename: create_acct_form_styles.ts  
+
+Purpose:  
+Defines the inline style objects used in the SignUpForm component. This allows for centralized styling in a modular and reusable format without relying on CSS files.
+
+System Context:  
+This module is imported into `create_acct_form.tsx` and applied to form elements using React’s inline style syntax.
+
+Developement History:
+- Written on 4.4.25
+- Last revised on: N/A
+
+Data Structures and Usage:  
+Exports a single object `styles` containing all relevant style definitions as JavaScript objects. These are mapped to JSX elements within the sign-up form UI.
+
+Expected Extensions or Revisions:  
+- Add responsive styles for mobile layout  
+- Move to CSS modules or a styled-components system if project grows  
+- Add hover/focus styles for better accessibility
+**/
 const styles = {
   signupContainer: {
     display: 'flex',

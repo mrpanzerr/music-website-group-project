@@ -48,7 +48,6 @@ function Layout() {
 		  <Route path="/artist/:id" element={<ArtistPage />} />
 		  <Route path="/track/:id" element={<TrackPage />} />
 		  <Route path="/album/:id" element={<AlbumPage />} />
-		  {/* <Route path="/album/:id" element={<AlbumPage />} /> */}
         </Routes>
       </section>
     </div>

@@ -1,3 +1,23 @@
+/**
+Author: Gaetano Panzer  
+Date: 4.4.25 
+Filename: create_acct_form.tsx  
+
+Purpose:  
+This module defines the `SignUpForm` presentational component, which renders the UI for the user sign-up form. It accepts props to manage user input state, display validation errors, and handle form submission.
+
+System Context:  
+Used within the account creation page as a reusable form component. It is designed to be stateless and rely entirely on props for behavior and interactivity.
+
+Developement History:
+- Written on: 4.4.25
+- Last revised on: N/A
+
+Future Extensions or Revisions:  
+- Add accessibility features (ARIA tags, focus handling)  
+- Include loading spinner during submission  
+- Convert to a form library (like Formik or React Hook Form) if form grows
+**/
 import styles from './create_acct_form_styles.ts';
 
 type SignUpFormProps = {
@@ -13,11 +33,66 @@ type SignUpFormProps = {
   handleSubmit: (e: React.FormEvent) => void;
 };
 
+/**
+Purpose:  
+Renders the HTML form for account creation. Displays fields for email, username, and passwords. It also shows any error messages passed via props and triggers a submit handler.
+
+Author: Gaetano Panzer  
+Written on: 4.4.25  
+Last Revised: N/A  
+
+Call Context:  
+Called as a child of `SignUp` to render the actual form interface. All data and logic is passed in as props.
+
+System Context:  
+Stateless component used purely for UI display and interaction. It relies on its parent (`SignUp`) for state and logic.
+
+Data Structures and Algorithms:  
+Destructures props to access input values, error messages, and change/submit handlers. Uses JSX to build and style the form with inline styles from `create_acct_form_styles.ts`.
+
+Expected Input:  
+All form values and handlers passed in via `SignUpFormProps`.
+
+Possible Output:  
+Renders the full sign-up form. On submission, invokes `handleSubmit`. Shows inline error messages.
+
+Future Extensions or Revisions:  
+- Modularize form fields into separate components  
+- Improve responsive styling  
+- Add client-side password strength meter
+**/
 function SignUpForm({
   email, username, password1, password2,
   error, setEmail, setUsername, setPassword1, setPassword2,
   handleSubmit
 }: SignUpFormProps) {
+  /**
+	Purpose:  
+	Helper function to render error messages conditionally below form fields.
+
+	Author: Gaetano Panzer  
+	Written on: 4.4.25  
+	Last Revised: N/A  
+
+	Call Context:  
+	Used inline in JSX for each input field in `SignUpForm`.
+
+	System Context:  
+	Enables cleaner, reusable error rendering logic. Prevents repeated logic in JSX.
+
+	Data Structures and Algorithms:  
+	Accesses the `error` object using a dynamic key and returns a styled `<p>` tag if an error exists.
+
+	Expected Input:  
+	`field` - the name of the form field to check for an error string.
+
+	Possible Output:  
+	Returns a JSX `<p>` element with the error text, or `undefined` if no error exists.
+
+	Future Extensions or Revisions:  
+	- Support for multiple error types (e.g., warning, info)  
+	- Animate or highlight error messages
+  **/
   const renderError = (field: string) => error[field] && <p style={styles.error}>{error[field]}</p>;
 
   return (

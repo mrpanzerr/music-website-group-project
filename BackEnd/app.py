@@ -12,13 +12,14 @@ app = Flask(__name__)
 bcrypt = Bcrypt(app)
 CORS(app)
 
-# Define User model for entering into database - needs to be updtaed to be consistent with database
-"""class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=False) """
 
+'''# Define User model for entering into database
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    username = db.Column(db.String(320), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+'''
 
 #If data is fetched from server URL + /search, this data is returned in json format.
 @app.route('/search', methods = ['POST'])
@@ -51,30 +52,13 @@ def signup():
         # Hash the password using bcrypt
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         
-        """
-        # Check if user already exists 
-        existing_user = User.query.filter_by(email=email).first()
-        
-        if not user:
-            return jsonify({"error": "Email not found"}), 401
-
-        # Check if the password matches
-        if not bcrypt.check_password_hash(user.password, password):
-            return jsonify({"error": "Incorrect password"}), 401
-        
-        # Create a new user and add to the database
-        new_user = User(email=email, username=username, password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit() 
-        """
+        # Insert user into the database (we'll need to set this part up)
+        #>>>>>>> a82af37f3ebd7d309788fa1edfffb76d0af0ca50
+        # insert_user_into_db(email, username, hashed_password)
         
         # If everything went well, return success message
         return jsonify({'message': 'User signed up successfully'}), 201
         
-        # Insert user into the database (we'll need to set this part up)
-#>>>>>>> a82af37f3ebd7d309788fa1edfffb76d0af0ca50
-        # insert_user_into_db(email, username, hashed_password)
-
     except Exception as e:
         # Catch any exception and return a 500 error with the exception message
         return jsonify({'error': f'Internal server error: {str(e)}'}), 500
@@ -82,24 +66,24 @@ def signup():
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-
     email = data.get('email')
     password = data.get('password')
 
     if not email or not password:
         return jsonify({'error': 'Email and password are required'}), 400
-       
-    """
+      
+    '''
     user = User.query.filter_by(email=email).first()
     
     if not user or not bcrypt.check_password_hash(user.password, password):
-        return jsonify({"error": "Invalid email or password}), 401
+        return jsonify({"error": "Invalid email or password"}), 401
  
     # Check if the provided password matches the hashed one
     if not user or not bcrypt.check_password_hash(user.password, password):
         return jsonify({"error": "Invalid email or password"}), 401
-        
-    """
+    
+    session['user'] = email
+    '''
 
     return jsonify({"message": "Login successful!"}), 200
 
