@@ -6,19 +6,19 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import json
 import requests
-import os
 
 token = get_token()
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 CORS(app, supports_credentials=True)
 
-app.secret_key = os.urandom(24)
+app.secret_key = "super-secret-stable-key"
 
 # SESSION CONFIGS
 app.config['SESSION_COOKIE_NAME'] = 'playback-session'
 app.config['SESSION_COOKIE_HTTPONLY'] = True
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Or 'None' if using HTTPS
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'  # Or 'None' if using HTTPS
+app.config['SESSION_COOKIE_SECURE'] = True
 
 
 '''# Define User model for entering into database
@@ -41,10 +41,19 @@ def search():
 # check to see if session is set
 @app.route('/check-session', methods=['GET'])
 def check_session():
-    if 'username' in session:
-        return jsonify({"logged_in": True, "username": session['username']})
+    if 'email' in session:
+        print(f"Session data: {session}")
+        return jsonify({"sessionSet": True})
     else:
-        return jsonify({"logged_in": False}), 200
+        print(f"Session data: {session}")
+        return jsonify({"sessionSet": False}), 200
+        
+# Log user out and close session
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    print(f"Session data: {session}")
+    return jsonify({'message': 'Logged out successfully'}), 200
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -70,7 +79,7 @@ def signup():
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
  
         session.permanent = True
-        session['username'] = username
+        session['email'] = email
         print(f"Session data: {session}")
         
         # Insert user into the database (we'll need to set this part up)
@@ -103,8 +112,9 @@ def login():
     if not user or not bcrypt.check_password_hash(user.password, password):
         return jsonify({"error": "Invalid email or password"}), 401
     
-    session['user'] = email
-    '''
+   session.permanent = True
+   session['email'] = email
+   '''
 
     return jsonify({"message": "Login successful!"}), 200
 

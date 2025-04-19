@@ -11,7 +11,7 @@ This component is part of the FrontEnd system. It is designed to be displayed af
 
 Development History:  
 - Written on: 4.6.25  
-- Last revised on: N/A  
+- Last revised on: 4.19.25  
 
 Existence Rationale:  
 This component exists to provide user feedback after a login attempt, informing the user whether they are logged in or need to try logging in again.  
@@ -31,23 +31,31 @@ Future Extensions or Revisions:
 - Implement redirection to a user dashboard or relevant page upon successful login.  
 - Improve error handling with more detailed feedback for the user.  
 **/
+
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
 const LoggedInPage = () => {
-	let n = 0;
-	if (n == 1) {
+	const location = useLocation();
+	const fromLogin = location.state?.fromLogin;
+
+	if (!fromLogin) {
+		// They didn’t come here via the intended path
 		return (
 			<div>
-				<h2>You have logged in</h2>
+				<h2>Oops!</h2>
+				<p>You’ve reached this page in error. Try signing up or logging in.</p>
 			</div>
 		);
 	}
-	// if reached by means other than logging in, display error message and prompt to login
-	else {
-		return (
-			<div>
-				<h2>You have reached this page in error. Try logging in</h2>
-			</div>
-		);
-	}
+
+	return (
+		<div>
+			<h2>Logged in successfully!</h2>
+			<p>Welcome back to <strong>PlayBack</strong></p>
+			{/* Optional: Add a link to the login page or explore content */}
+		</div>
+	);
 };
 
 export default LoggedInPage

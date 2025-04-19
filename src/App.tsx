@@ -8,6 +8,7 @@ import LoggedOutPage from "./components/LoginLogout/logged_out";
 import ArtistPage from './components/Templates/ArtistPage';
 import TrackPage from './components/Templates/TrackPage';
 import AlbumPage from './components/Templates/AlbumPage';
+import Navbar from './components/navbar';
 
 
 // Landing Page
@@ -26,16 +27,7 @@ function Layout() {
 				</header>
 				)
 			}
-			{/* Always show nav */}
-			<nav>
-				<ul>
-					<li><Link to="/">Home</Link></li>
-					{/* if user is logged in display logout */}
-					{/* if user is not logged in display create account and login */}
-					<li><Link to="/create_acct">Create Account</Link></li>
-					<li><Link to="/login_page">Login</Link></li>
-				</ul>
-			</nav>
+			<Navbar />
 	
 	<section>
         <Routes>

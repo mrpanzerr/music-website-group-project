@@ -129,24 +129,11 @@ function SignUp() {
 
       // Parse the response data
       const data = await response.json();
-	  
-	  const sessionResponse = await fetch("http://127.0.0.1:5000/check-session", {
-		  method: "GET",
-		  credentials: "include", // Important to include cookies (session)
-		});
-	  
-	  const sessionData = await sessionResponse.json();
-	  if (sessionData.logged_in) {
-		console.log("User is logged in:", sessionData.username);
-	  } else {
-		console.log("user is not logged in");
-	  }
-	  
       if (response.ok) {
         // If the response is OK, clear the password fields and navigate to the account created page
         setPassword1('');
         setPassword2('');
-        navigate('/acct_created_page'); 
+        navigate('/acct_created_page', { state: { fromCreateAcct: true } }); 
       } else {
         // If the response is not OK, set the error message from the API response
         setError({ api: data.error || 'Something went wrong.' });

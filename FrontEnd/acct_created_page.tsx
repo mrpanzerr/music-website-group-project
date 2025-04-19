@@ -4,40 +4,63 @@
   Filename: acct_created_page.tsx
   
   Purpose:
-  This program is designed to display a message that a user has successfully signed up
+  This component displays a confirmation message to users after they have successfully signed up,
+  and ends their session to prompt login going forward.
   
   System Context:
-  This file is part of the FrontEnd system. It contributes to the overall functionality by confirming successful account creation through a standalone confirmation page.  
-  
+  Part of the FrontEnd system, confirming successful account creation via a standalone page,
+  accessed only through the account creation flow.
+
   Development History:
   - Written on: 4.4.25
-  - Last revised on: N/A
+  - Last revised on: 4.19.25
   
   Existence Rationale:
-  This file exists to let user's know their account has been created
-  
-  Data Structures and Algorithms:
-  This component does not use any complex data structures or algorithms. It is a simple presentational component rendered with React.  
-  
+  To provide feedback to the user that their account has been created successfully and ensure they are logged out post-signup.
+
   Expected Input:
-  N/A — the page is purely presentational and expects no props or state.
-  
-  Possible Output:
-  A page that displays successful account creating message
-  
-  Future Extensions or Revisions:
-  - an error message that displays if a user accesses the page by means other than creating an account
-  - Include a link or button to redirect users directly to the login page
- **/
+  `location.state` must include `{ fromCreateAcct: true }`, set via React Router `navigate`.
+
+  Expected Output:
+  - If accessed with the correct state: confirmation message and session is ended.
+  - If accessed improperly: error message indicating invalid navigation.
+
+  Future Revisions:
+  - Add a redirect link to the login page.
+  - Add content suggestions or featured sections to keep users engaged.
+**/
 
 
-import React from 'react';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const AcctCreatedPage = () => {
+	const location = useLocation();
+	const fromCreateAcct = location.state?.fromCreateAcct;
+
+	useEffect(() => {
+		// Always end the session when this page is loaded
+		fetch('http://127.0.0.1:5000/logout', {
+			method: 'POST',
+			credentials: 'include',
+		});
+	}, []);
+
+	if (!fromCreateAcct) {
+		// They didn’t come here via the intended path
+		return (
+			<div>
+				<h2>Oops!</h2>
+				<p>You’ve reached this page in error. Try signing up or logging in.</p>
+			</div>
+		);
+	}
+
 	return (
 		<div>
-			<h2>Account Created Successfully!</h2>
-			<p>Your account has been created. You can now log in.</p>
+			<h2>Account created successfully!</h2>
+			<p>You’ve been logged out. You can now log in and start exploring.</p>
+			{/* Optional: Add a link to the login page or explore content */}
 		</div>
 	);
 };

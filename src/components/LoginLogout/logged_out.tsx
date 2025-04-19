@@ -11,7 +11,7 @@ This component is part of the FrontEnd system. It handles the user's redirection
 
 Development History:  
 - Written on: 4.6.25  
-- Last revised on: N/A  
+- Last revised on: 4.19.25  
 
 Existence Rationale:  
 This component exists to inform the user whether they have successfully logged out or if they reached the page in error, prompting them to log in again.  
@@ -32,23 +32,30 @@ Future Extensions or Revisions:
 - Enhance error handling and provide a more informative message for failed logout attempts.  
 **/
 
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
 const LoggedOutPage = () => {
-	let n = 0;
-	if (n == 1) {
+	const location = useLocation();
+	const fromLogout = location.state?.fromLogout;
+
+	if (!fromLogout) {
+		// They didn’t come here via the intended path
 		return (
 			<div>
-				<h2>You have logged out</h2>
+				<h2>Oops!</h2>
+				<p>You’ve reached this page in error. Try signing up or logging in.</p>
 			</div>
 		);
 	}
-	// if reached by means other than clicking the logout button, display error message and prompt to login 
-	else {
-		return (
-			<div>
-				<h2>You have reached this page in error. Try logging in</h2>
-			</div>
-		);
-	}
-}
+
+	return (
+		<div>
+			<h2>Logged out successfully!</h2>
+			<p>Come back soon</p>
+			{/* Optional: Add a link to the login page or explore content */}
+		</div>
+	);
+};
 
 export default LoggedOutPage

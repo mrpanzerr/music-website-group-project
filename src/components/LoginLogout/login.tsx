@@ -104,7 +104,7 @@ function Login() {
       if (response.ok) {
         setEmail('');
         setPassword('');
-        navigate('/logged_in'); // Navigate to logged_in page after successful login
+        navigate('/logged_in', { state: { fromLogin: true }}); // Navigate to logged_in page after successful login
       } else {
         setError({ api: data.error || 'Something went wrong.' });
       }
