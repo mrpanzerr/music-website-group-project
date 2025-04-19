@@ -122,12 +122,26 @@ function SignUp() {
     try {
       const response = await fetch("http://127.0.0.1:5000/signup", {
         method: 'POST', // POST request to signup endpoint
+		credentials: 'include',
         headers: { 'Content-Type': 'application/json' }, // Set content type to JSON
         body: JSON.stringify({ email, username, password: password1 }), // Send the form data as JSON
       });
 
       // Parse the response data
       const data = await response.json();
+	  
+	  const sessionResponse = await fetch("http://127.0.0.1:5000/check-session", {
+		  method: "GET",
+		  credentials: "include", // Important to include cookies (session)
+		});
+	  
+	  const sessionData = await sessionResponse.json();
+	  if (sessionData.logged_in) {
+		console.log("User is logged in:", sessionData.username);
+	  } else {
+		console.log("user is not logged in");
+	  }
+	  
       if (response.ok) {
         // If the response is OK, clear the password fields and navigate to the account created page
         setPassword1('');

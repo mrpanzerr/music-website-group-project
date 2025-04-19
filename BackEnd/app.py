@@ -6,11 +6,19 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import json
 import requests
+import os
 
 token = get_token()
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
-CORS(app)
+CORS(app, supports_credentials=True)
+
+app.secret_key = os.urandom(24)
+
+# SESSION CONFIGS
+app.config['SESSION_COOKIE_NAME'] = 'playback-session'
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Or 'None' if using HTTPS
 
 
 '''# Define User model for entering into database
@@ -29,11 +37,20 @@ def search():
 
     #In this example, "radiohead" is being searched as an artist returning 5 results
     return general_search(token, search_value, data.get("type", "artist"), 5)
+    
+# check to see if session is set
+@app.route('/check-session', methods=['GET'])
+def check_session():
+    if 'username' in session:
+        return jsonify({"logged_in": True, "username": session['username']})
+    else:
+        return jsonify({"logged_in": False}), 200
 
 @app.route('/signup', methods=['POST'])
 def signup():
     try :
         # Get the JSON data from the request
+        print("Signup route hit")
         data = request.get_json()
 
         # Extract the email, username, and password
@@ -51,6 +68,10 @@ def signup():
 
         # Hash the password using bcrypt
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+ 
+        session.permanent = True
+        session['username'] = username
+        print(f"Session data: {session}")
         
         # Insert user into the database (we'll need to set this part up)
         #>>>>>>> a82af37f3ebd7d309788fa1edfffb76d0af0ca50
