@@ -1,3 +1,18 @@
+/*
+ * Author: Gaetano Panzer, Ryan Ferrel, Max Stone
+ * Date: 4.19.25
+ * Filename: App.tsx
+ * Purpose: Defines the routing and layout for the frontend React application
+ * System Context: Main entry point for routing in the client-side React app
+ * Written: 4.1.25
+ * Revised: 4.19.25
+ * Why It Exists: Sets up the routing infrastructure and renders layout and pages based on URL paths
+ * Data Structures & Algorithms: Uses React Router for client-side routing, conditional rendering for home view
+ * Expected Input: URL path from browser
+ * Possible Output: Renders specific components tied to routes and handles dynamic routes for artists, tracks, albums
+ * Extensions/Revisions: Could include error handling for unmatched routes, use layout wrappers for nested routing, or add route protection for authenticated users
+ */
+
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import GetData from "./components/search_bar.tsx";
 import CreateAcctPage from "../FrontEnd/create_acct_page.tsx";
@@ -11,7 +26,18 @@ import AlbumPage from './components/Templates/AlbumPage';
 import Navbar from './components/navbar';
 
 
-// Landing Page
+/*
+ * Purpose: Layout component controls overall structure and home page behavior
+ * Author: Gaetano Panzer, Ryan Ferrel, Max Stone
+ * Written: 4.4.25
+ * Revised: 4.19.25
+ * Called From: App component, rendered inside <Router>
+ * System Context: Contains header and routing logic for various paths
+ * Data Use: Reads current URL path with useLocation to conditionally render home page content
+ * Input: React Router path
+ * Output: Layout and component views for each defined route
+ * Extensions: Could separate layout into multiple nested layouts for different parts of app
+ */
 function Layout() {
 	const location = useLocation();
 	const isHome = location.pathname === "/";
@@ -46,6 +72,18 @@ function Layout() {
   );
 }
 
+/*
+ * Purpose: Main App component that initializes React Router
+ * Author: Gaetano Panzer, Ryan Ferrel, Max Stone
+ * Written: 4.1.25
+ * Revised: 4.19.25
+ * Called From: Entry point (main.tsx or index.tsx)
+ * System Context: Top-level component housing the full client-side router
+ * Data Use: None
+ * Input: None
+ * Output: Mounts the Layout component inside a Router provider
+ * Extensions: Could wrap with providers (auth, theme, etc.) or error boundaries
+ */
 function App() {
 	return (
 		<Router>
