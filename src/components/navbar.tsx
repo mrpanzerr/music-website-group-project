@@ -1,17 +1,24 @@
-/*
- * Author: Gaetano Panzer
- * Date: 4.19.25
- * Filename: Navbar.tsx
- * Purpose: Renders the navigation bar component for the frontend UI
- * System Context: Part of the React frontend of the web application, manages session-based navigation
- * Written: 4.19.25
- * Revised: 4.19.25
- * Why It Exists: Provides navigation links that change dynamically based on user login session status
- * Data Structures & Algorithms: Uses useState for session state and useEffect for side effect to check session
- * Expected Input: None directly; responds to backend session state
- * Possible Output: Displays links for navigation based on session (Home, Login, Logout, Create Account)
- * Extensions/Revisions: Could include profile link, admin logic, or use context API for broader session state
- */
+/**
+ Author: Gaetano Panzer
+ Date: 4.19.25
+ Filename: Navbar.tsx
+ 
+ Purpose: Renders the navigation bar component for the frontend UI
+ 
+ System Context: Part of the React frontend of the web application, manages session-based navigation
+ 
+ Written: 4.19.25
+ Revised: 4.19.25
+ 
+ Why It Exists: Provides navigation links that change dynamically based on user login session status
+ 
+ Data Structures & Algorithms: Uses useState for session state and useEffect for side effect to check session
+ Expected Input: None directly; responds to backend session state
+ 
+ Possible Output: Displays links for navigation based on session (Home, Login, Logout, Create Account)
+ 
+ Extensions/Revisions: Could include profile link, admin logic, or use context API for broader session state
+ **/
 
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
