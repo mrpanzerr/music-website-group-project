@@ -28,6 +28,16 @@ def search():
 
     #In this example, "radiohead" is being searched as an artist returning 5 results
     return general_search(token, search_value, data.get("type", "artist"), 5)
+@app.route('/createpost', methods=['POST'])
+def create_post():
+    try :
+        data = request.get_json()
+        header = data.get("header")
+        body = data.get("body")
+        if not header or not body:
+            return jsonify({'error': 'All fields are required'}), 400
+        
+    except :
 
 @app.route('/signup', methods=['POST'])
 def signup():

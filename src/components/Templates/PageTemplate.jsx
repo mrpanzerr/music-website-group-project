@@ -1,8 +1,16 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-// This component will receive the data as props and display it
+
+
 const PageTemplate = ({ data }) => {
+
+    const handleClick = () => {
+        console.log("pressed")
+    }
+
+
+
     let artistData, trackData, albumData, type;
 
     if (data.type === "artist") {
@@ -19,11 +27,7 @@ const PageTemplate = ({ data }) => {
     const { artistname, followers, artistimage, genres = [], toptracks = []} = artistData || {};
     const { trackname, trackalbumname, trackalbumid, trackalbumtype, trackimage, trackreleasedate, trackartists = []} = trackData || {};
     const { albumname, albumtype, tracknumber, albumimage,  albumreleasedate, albumartists = [], albumtracks = []} = albumData || {};
-    console.log(artistimage)
-             // Default to empty array if artist is missing
-    // Fallback for missing or malformed image
 
-    // Ensure 'artist' is always an array, and provide default values if it's missing
 
     return (
         <div className="page-template">
@@ -82,6 +86,8 @@ const PageTemplate = ({ data }) => {
                     </ul></li>
                 </ul>
             )}
+            <button id="postButton" onClick={handleClick} >CreatePost</button>
+
         </div>
     );
 };
