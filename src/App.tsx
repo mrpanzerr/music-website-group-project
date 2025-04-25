@@ -44,31 +44,50 @@ function Layout() {
 	const isHome = location.pathname === "/";
 	
 	return(
-		<div className="page-background">		
-			{/* Only show welcome + GetData on home */}
-			{isHome && (
-				<header>
-					<h1>Welcome to PlayBack!</h1>
-					<p>Your uninhibited music journey</p>
-					<GetData />
-				</header>
-				)
-			}
-			<Navbar />
-	
-	<section>
-        <Routes>
-          <Route path="/" element={null} />
-          <Route path="/create_acct" element={<CreateAcctPage />} />
-          <Route path="/acct_created_page" element={<AcctCreatedPage />} />
-          <Route path="/login_page" element={<LoginPage />} />
-          <Route path="/logged_in" element={<LoggedInPage />} />
-		  <Route path="/logged_out" element={<LoggedOutPage />} />
-		  <Route path="/artist/:id" element={<ArtistPage />} />
-		  <Route path="/track/:id" element={<TrackPage />} />
-		  <Route path="/album/:id" element={<AlbumPage />} />
-        </Routes>
-      </section>
+		<div className="page-background">
+			<div className="orange-border">	
+				{/* Only show welcome + GetData on home */}
+				<div className="navbar">
+					<Navbar />
+				</div>
+				{isHome && (
+					<header>
+						<div className="center">
+							<div className="casette-base">
+								<div className="casette-screw top-left"></div>
+								<div className="casette-screw top-right"></div>
+								<div className="casette-screw bottom-left"></div>
+								<div className="casette-screw bottom-right"></div>
+								<div className="casette-bottom"></div>
+								<div className="casette-content">
+									<h1 className="logo-text">PlayBack</h1>
+									<div className="casette-underline"></div>
+									<div className="casette-gap">
+										<GetData />
+									</div>
+									<div className="casette-colorline top"></div>
+									<div className="casette-colorline middle"></div>
+									<div className="casette-colorline bottom"></div>
+								</div>
+							</div>
+						</div>
+					</header>
+					)
+				}
+		<section>
+			<Routes>
+			<Route path="/" element={null} />
+			<Route path="/create_acct" element={<CreateAcctPage />} />
+			<Route path="/acct_created_page" element={<AcctCreatedPage />} />
+			<Route path="/login_page" element={<LoginPage />} />
+			<Route path="/logged_in" element={<LoggedInPage />} />
+			<Route path="/logged_out" element={<LoggedOutPage />} />
+			<Route path="/artist/:id" element={<ArtistPage />} />
+			<Route path="/track/:id" element={<TrackPage />} />
+			<Route path="/album/:id" element={<AlbumPage />} />
+			</Routes>
+		</section>
+	  </div>
     </div>
   );
 }
