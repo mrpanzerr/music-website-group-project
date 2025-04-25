@@ -24,6 +24,7 @@ import ArtistPage from './components/Templates/ArtistPage';
 import TrackPage from './components/Templates/TrackPage';
 import AlbumPage from './components/Templates/AlbumPage';
 import Navbar from './components/navbar';
+import './App.css';
 
 
 /*
@@ -43,7 +44,7 @@ function Layout() {
 	const isHome = location.pathname === "/";
 	
 	return(
-		<div>		
+		<div className="page-background">		
 			{/* Only show welcome + GetData on home */}
 			{isHome && (
 				<header>
