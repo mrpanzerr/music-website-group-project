@@ -52,6 +52,13 @@ function Layout() {
 				</div>
 				{isHome && (
 					<header>
+						<div className="page-header">
+							<h1 className="sideB">Side A</h1>
+							<div className="arrow-container">
+								<div className="arrow-body"></div>
+								<div className="arrow-head"></div>
+							</div>
+						</div>
 						<div className="center">
 							<div className="casette-base">
 								<div className="casette-screw top-left"></div>
@@ -71,6 +78,7 @@ function Layout() {
 								</div>
 							</div>
 						</div>
+						<div className="page-footer"></div>
 					</header>
 					)
 				}

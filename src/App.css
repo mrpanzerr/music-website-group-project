@@ -8,12 +8,13 @@
 
 /* Page background color */
 .page-background {
-    background-color: #303030;
+    background-color: #1f1d1d;
 }
 
 /* Orange border for the main container */
 .orange-border {
-    border: 2px solid #FBB03B;
+    border: 3px solid #FBB03B;
+    background-color: #363333;
     margin: 0 auto;
     width: 70%;
     
@@ -25,7 +26,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 75vh;
 }
 
 .center-buttons {
@@ -173,4 +174,28 @@
 /* Making the Navbar component stretch across the width of the orange border */
 .navbar {
     width: 100%;
+}
+
+/* Page Header styling */
+.page-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: linear-gradient(to bottom, #FBB03B, #F7931E, #F15A24);
+    height: 20vh;
+    width: 98%;
+    margin: 0 auto;
+}
+
+/* Page Footer styling */
+.page-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: linear-gradient(to top, #FBB03B, #F7931E, #F15A24);
+    height: 20vh;
+    width: 98%;
+    margin: 15px auto;
 }

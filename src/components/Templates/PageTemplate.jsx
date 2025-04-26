@@ -33,6 +33,7 @@ Future Revisions or Extensions:
 
 **/
 import React from 'react';
+import './PageTemplate.css';
 import { useParams } from 'react-router-dom';
 
 // This component will receive the data as props and display it
@@ -61,12 +62,19 @@ const PageTemplate = ({ data }) => {
 
     return (
         <div className="page-template">
+			<div className="page-header">
+				<h1 className="sideB">Side B</h1>
+				<div className="arrow-container">
+					<div className="arrow-body"></div>
+					<div className="arrow-head"></div>
+				</div>
+			</div>
             {type === "artist" && (
-			  <section className="artistDetails flex flex-col gap-6">
+			  <section className="artistDetails">
 				{/* Artist Header */}
 				<div className="flex gap-4">
 				  <h1>{artistname}</h1>
-				  <div className="artistImage w-1/3 max-w-xs">
+				  <div className="artistImage">
 					<img
 					  src={artistimage}
 					  alt={`${artistname}`}
@@ -115,16 +123,16 @@ const PageTemplate = ({ data }) => {
 			)}
 
             {type === "track" && (
-			  <section className="trackDetails flex flex-col gap-4">
-				<div className="flex gap-4">
-				  <div className="trackImage w-1/3 max-w-xs">
+			  <section className="trackDetails">
+				<div className="flex">
+				  <div className="trackImage">
 					<img
 					  src={trackimage}
 					  alt={`${trackname} cover`}
 					  className="w-full h-auto rounded-xl shadow-md"
 					/>
 				  </div>
-				  <ul className="trackInfo flex-1 space-y-2">
+				  <ul className="trackInfo">
 					<li><strong>Track Name:</strong> {trackname}</li>
 					<li>
 					  <strong>Album:</strong>{' '}
@@ -188,6 +196,7 @@ const PageTemplate = ({ data }) => {
 					{/* <Thoughts /> -- This will be the posting/comment component */}
 				</section>
 			)};
+			<div className="page-footer"></div>
         </div>
     );
 };
