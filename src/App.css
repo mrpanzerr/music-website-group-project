@@ -52,9 +52,10 @@
     position: absolute;
     width: 21px;
     height: 21px;
-    background-color: #808080;
-    border-color: #666666;
-    border-width: 2px;
+    background-color: #999999;
+    border-style: solid;
+    border-color: #808080;
+    border-width: 1px;
     border-radius: 10px;
 }
 
@@ -167,4 +168,9 @@
     left: 50%;
     top: -2%;
     transform: translate(-50%, 0%);
+}
+
+/* Making the Navbar component stretch across the width of the orange border */
+.navbar {
+    width: 100%;
 }
