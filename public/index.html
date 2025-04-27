@@ -1,13 +1,46 @@
+<!-- 
+  Author: Ryan Ferrel
+  Date: 4.1.25
+  Filename: index.html
+  
+  Purpose: Base HTML file that serves as the entry point for the React frontend app.
+  
+  System Context: Provides the container into which the React application is rendered.
+  
+  Written: 4.1.25
+  Revised: N/A
+  
+  Description: Loads the root div for React to mount the app and includes the main script.
+  
+  Data Structures & Algorithms: None.
+  
+  Expected Input: None directly; rendered in the browser.
+  
+  Output: Displays the React app rendered inside the #root div.
+  
+  Expected Extensions: Custom meta tags, analytics scripts, additional favicon support, or PWA configs.
+-->
+
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Character encoding for the document -->
     <meta charset="UTF-8" />
+
+    <!-- Favicon for the browser tab -->
     <link rel="icon" type="image/svg+xml" href="vite.svg" />
+
+    <!-- Responsive scaling for different screen sizes -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Title displayed in the browser tab -->
     <title>Vite + React + TS</title>
   </head>
   <body>
+    <!-- React mounts its root component inside this div -->
     <div id="root"></div>
+
+    <!-- Main TypeScript module that bootstraps the React app -->
     <script type="module" src="../src/main.tsx"></script>
   </body>
 </html>

@@ -30,7 +30,6 @@ export const badWords: string[] = [
     "tranny",
     "retard",
     "mongoloid",
-    "cripple",
     "pedophile",
     "terrorist",
   ];
