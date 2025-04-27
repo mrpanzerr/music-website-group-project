@@ -33,6 +33,7 @@
 
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import './acct_created_page.css';
 
 const AcctCreatedPage = () => {
 	const location = useLocation();
@@ -49,7 +50,7 @@ const AcctCreatedPage = () => {
 	if (!fromCreateAcct) {
 		// They didn’t come here via the intended path
 		return (
-			<div>
+			<div className="result-page">
 				<h2>Oops!</h2>
 				<p>You’ve reached this page in error. Try signing up or logging in.</p>
 			</div>
@@ -57,7 +58,7 @@ const AcctCreatedPage = () => {
 	}
 
 	return (
-		<div>
+		<div className="result-page">
 			<h2>Account created successfully!</h2>
 			<p>You’ve been logged out. You can now log in and start exploring.</p>
 			{/* Optional: Add a link to the login page or explore content */}

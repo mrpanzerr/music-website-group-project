@@ -6,7 +6,7 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Baumans&display=swap");
 
-/* Page background color */
+/* Page background general settings */
 .page-background {
     background-color: #1f1d1d;
 }
@@ -17,7 +17,6 @@
     background-color: #363333;
     margin: 0 auto;
     width: 70%;
-    
 }
 
 /* Center content in the middle of the page */

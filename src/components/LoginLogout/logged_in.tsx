@@ -33,16 +33,17 @@ Future Extensions or Revisions:
 **/
 
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import './login_logout.css';
 
 const LoggedInPage = () => {
 	const location = useLocation();
 	const fromLogin = location.state?.fromLogin;
-
+	
 	if (!fromLogin) {
 		// They didn’t come here via the intended path
 		return (
-			<div>
+			<div className="result-page">
 				<h2>Oops!</h2>
 				<p>You’ve reached this page in error. Try signing up or logging in.</p>
 			</div>
@@ -50,9 +51,9 @@ const LoggedInPage = () => {
 	}
 
 	return (
-		<div>
+		<div className="result-page">
 			<h2>Logged in successfully!</h2>
-			<p>Welcome back to <strong>PlayBack</strong></p>
+			<p>Welcome back to <span className="changed-font"><Link to="/">PlayBack</Link></span></p>
 			{/* Optional: Add a link to the login page or explore content */}
 		</div>
 	);

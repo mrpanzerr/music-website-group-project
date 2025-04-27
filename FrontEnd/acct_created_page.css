@@ -1,0 +1,23 @@
+/* 
+* Author: Max Collins
+* Date: 4/27/2025
+* Description: CSS file for acct_created_page.tsx
+*/
+
+.result-page {
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #FFFFFF;
+}
+
+.result-page h2 {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+.result-page p {
+    font-size: 30px;
+}
