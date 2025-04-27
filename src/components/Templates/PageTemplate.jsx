@@ -161,16 +161,16 @@ const PageTemplate = ({ data }) => {
 			)}
 
             {type === "album" && (
-				<section className="albumDetails flex flex-col gap-4">
-					<div className="flex gap-4">
-						<div className="albumImage w-1/3 max-w-xs">
-							<h1>{albumname}</h1>
+				<section className="albumDetails">
+					<div className="flex">
+						<div className="albumImage">
 							<img src={albumimage} alt={`${albumname} cover`} className="w-full h-auto rounded-xl shadow-md" />
 						</div>
-						<ul className="albumInfo flex-1 space-y-2">
+						<ul className="albumInfo">
+							<li><strong>Album Name:</strong> {albumname}</li>
 							<li>
 								<strong>Artists:</strong>
-								<ul className="albumArtists list-disc list-inside">{albumartists.map(([name], index) => (
+								<ul className="albumArtists">{albumartists.map(([name], index) => (
 									<li key={index}>{name}</li>
 								))}
 								</ul>
@@ -179,13 +179,13 @@ const PageTemplate = ({ data }) => {
 							<li><strong>Release Date:</strong> {albumreleasedate}</li>
 						</ul>
 					</div>
-
-					<div className="albumTracksSection mt-6">
-						<h2 className="text-lg font-semibold mb-2">Tracks</h2>
-						<ul className="albumTracks list-decimal list-inside space-y-1">
+					<div className="divider"></div>
+					<div className="tracksSection">
+						<h2 className="tracksHeader">-Tracks-</h2>
+						<ul className="albumTracks">
 							{albumtracks.map(([trackName, trackId], index) => (
 							<li key={index}>
-								<a href={`/track/${trackId}`} className="text-blue-600 hover:underline">
+								<a href={`/track/${trackId}`}>
 								{trackName}
 								</a>
 							</li>

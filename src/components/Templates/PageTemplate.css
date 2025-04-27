@@ -87,3 +87,44 @@
 }
 
 /* Album page styling */
+
+.albumInfo {
+    list-style: none;
+    font-size: 35px;
+    color: #FFFFFF;
+}
+
+.albumInfo a {
+    color: #FFFFFF;
+}
+
+.divider {
+    width: 98%;
+    height: 2px;
+    background-color: #FBB03B;
+    margin: 20px auto;
+}
+.tracksSection {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.tracksHeader {
+    font-family: "Baumans", sans-serif;
+    font-size: 60px;
+    color: #FFFFFF;
+}
+
+.albumTracks {
+    list-style: none;
+    column-count: 3;
+    font-size: 30px;
+}
+
+.albumTracks a {
+    color: #FFFFFF;
+}
