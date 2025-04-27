@@ -1,6 +1,7 @@
 /**
 Component: PageTemplate  
 Author: Ryan Ferrel
+Styling: Max Collins
 Date Created: 04.10.2025  
 Last Revised: 04.18.2025  
 
@@ -62,6 +63,8 @@ const PageTemplate = ({ data }) => {
 
     return (
         <div className="page-template">
+
+			{/* Header Section */}
 			<div className="page-header">
 				<h1 className="sideB">Side B</h1>
 				<div className="arrow-container">
@@ -69,19 +72,19 @@ const PageTemplate = ({ data }) => {
 					<div className="arrow-head"></div>
 				</div>
 			</div>
+
             {type === "artist" && (
 			  <section className="artistDetails">
 				{/* Artist Header */}
-				<div className="flex gap-4">
-				  <h1>{artistname}</h1>
+				<h1 className="titleHeader">-{artistname}-</h1>
+				<div className="flex-artist">
 				  <div className="artistImage">
 					<img
 					  src={artistimage}
 					  alt={`${artistname}`}
-					  className="w-full h-auto rounded-xl shadow-md object-cover"
 					/>
 				  </div>
-				  <ul className="artistInfo flex-1 space-y-2">
+				  <ul className="artistInfo">
 					<li><strong>Spotify Followers:</strong> {followers.toLocaleString()}</li>
 					{genres > 0 ? (
 						<li>
@@ -96,21 +99,20 @@ const PageTemplate = ({ data }) => {
 					)}
 				  </ul>
 				</div>
-
+				<div className="divider"></div>
 				{/* Top Tracks Section */}
-				<div className="artistTopTracks mt-6">
-				  <h2 className="text-lg font-semibold mb-2">Top Tracks</h2>
-				  <ul className="topTracks flex flex-col gap-3">
+				<div className="artistTopTracks">
+				  <h2 className="tracksHeader">-Top Tracks-</h2>
+				  <ul className="topTracks">
 					{toptracks.slice(0, 10).map(([trackName, trackId, albumImage, albumId], index) => (
-					  <li key={index} className="flex items-center gap-4 p-2 rounded-md hover:bg-gray-100 transition">
-						<a href={`/album/${albumId}`} className="w-12 h-12 flex-shrink-0">
+					  <li key={index} className="flex">
+						<a href={`/album/${albumId}`}>
 						  <img
 							src={albumImage}
 							alt={`${trackName} album cover`}
-							className="w-full h-full object-cover rounded"
 						  />
 						</a>
-						<a href={`/track/${trackId}`} className="text-blue-600 hover:underline">
+						<a href={`/track/${trackId}`}>
 						  {trackName}
 						</a>
 					  </li>
@@ -124,28 +126,28 @@ const PageTemplate = ({ data }) => {
 
             {type === "track" && (
 			  <section className="trackDetails">
+				<h1 className="titleHeader">-{trackname}-</h1>
 				<div className="flex">
 				  <div className="trackImage">
 					<img
 					  src={trackimage}
 					  alt={`${trackname} cover`}
-					  className="w-full h-auto rounded-xl shadow-md"
 					/>
 				  </div>
 				  <ul className="trackInfo">
 					<li><strong>Track Name:</strong> {trackname}</li>
 					<li>
 					  <strong>Album:</strong>{' '}
-					  <a href={`/album/${trackalbumid}`} className="text-blue-600 hover:underline">
+					  <a href={`/album/${trackalbumid}`}>
 						{trackalbumname}
 					  </a>
 					</li>
 					<li>
 					  <strong>Artists:</strong>
-					  <ul className="trackArtists list-disc list-inside">
+					  <ul className="trackArtists">
 						{trackartists.map(([name, id], index) => (
 						  <li key={index}>
-							<a href={`/artist/${id}`} className="text-blue-600 hover:underline">
+							<a href={`/artist/${id}`}>
 							  {name}
 							</a>
 						  </li>
@@ -162,17 +164,23 @@ const PageTemplate = ({ data }) => {
 
             {type === "album" && (
 				<section className="albumDetails">
+					<h1 className="titleHeader">-{albumname}-</h1>
 					<div className="flex">
 						<div className="albumImage">
-							<img src={albumimage} alt={`${albumname} cover`} className="w-full h-auto rounded-xl shadow-md" />
+							<img src={albumimage} alt={`${albumname} cover`}/>
 						</div>
 						<ul className="albumInfo">
 							<li><strong>Album Name:</strong> {albumname}</li>
 							<li>
 								<strong>Artists:</strong>
-								<ul className="albumArtists">{albumartists.map(([name], index) => (
-									<li key={index}>{name}</li>
-								))}
+								<ul className="albumArtists">
+									{albumartists.map(([name, id], index) => (
+						  			<li key={index}>
+										<a href={`/artist/${id}`}>
+							  				{name}
+										</a>
+						  	</li>
+						))}
 								</ul>
 							</li>
 							<li><strong>Number of Tracks:</strong> {tracknumber}</li>

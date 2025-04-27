@@ -1,5 +1,5 @@
 /*
- * Author: Gaetano Panzer, Ryan Ferrel, Max Stone
+ * Author: Gaetano Panzer, Ryan Ferrel, Max Collins
  * Date: 4.19.25
  * Filename: App.tsx
  * Purpose: Defines the routing and layout for the frontend React application
@@ -29,7 +29,7 @@ import './App.css';
 
 /*
  * Purpose: Layout component controls overall structure and home page behavior
- * Author: Gaetano Panzer, Ryan Ferrel, Max Stone
+ * Author: Gaetano Panzer, Ryan Ferrel, Max Collins
  * Written: 4.4.25
  * Revised: 4.19.25
  * Called From: App component, rendered inside <Router>
@@ -102,7 +102,7 @@ function Layout() {
 
 /*
  * Purpose: Main App component that initializes React Router
- * Author: Gaetano Panzer, Ryan Ferrel, Max Stone
+ * Author: Gaetano Panzer, Ryan Ferrel, Max Collins
  * Written: 4.1.25
  * Revised: 4.19.25
  * Called From: Entry point (main.tsx or index.tsx)

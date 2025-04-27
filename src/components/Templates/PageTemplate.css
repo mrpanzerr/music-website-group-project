@@ -11,6 +11,11 @@
 .page-template {
     background-color: #363333;
 }
+
+img {
+    box-shadow: 0 0 5px #F7931E;
+}
+
 /* Page Header styling */
 .page-header {
     display: flex;
@@ -67,8 +72,20 @@
     margin-bottom: -5px;
 }
 
-/* Track page styling */
+/* Title styling */
+.titleHeader {
+    font-family: "Baumans", sans-serif;
+    font-size: 60px;
+    color: #FFFFFF;
+    font-style: italic;
+    margin-top: 20px;
+    margin-bottom: -20px;
+    padding: 0 20px;
+    text-align: center;
 
+}
+
+/* Track page styling */
 .flex {
     display: flex;
     flex-direction: row;
@@ -87,7 +104,6 @@
 }
 
 /* Album page styling */
-
 .albumInfo {
     list-style: none;
     font-size: 35px;
@@ -104,27 +120,82 @@
     background-color: #FBB03B;
     margin: 20px auto;
 }
+
 .tracksSection {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
-    
+    align-items: center; 
 }
 
 .tracksHeader {
     font-family: "Baumans", sans-serif;
     font-size: 60px;
+    font-style: italic;
     color: #FFFFFF;
 }
 
 .albumTracks {
-    list-style: none;
-    column-count: 3;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 80px;
+    padding: 0;
     font-size: 30px;
+    list-style: square;
+    color: #FFFFFF;
 }
 
 .albumTracks a {
     color: #FFFFFF;
+}
+
+/* Artist page styling */
+.flex-artist {
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+    justify-content: center;
+    align-items: center;
+}
+.artistInfo {
+    list-style: none;
+    font-size: 35px;
+    color: #FFFFFF;
+    margin-top: 10px;
+    margin-bottom: -10px;
+}
+
+/* Top tracks section styling */
+.artistTopTracks {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.artistTopTracks ul {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 80px;
+    padding: 0;
+}
+
+.artistTopTracks li {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    margin-top: 20px;
+}
+
+.artistTopTracks a {
+    color: #FFFFFF;
+}
+
+.artistTopTracks img {
+    width: 500px;
+    height: 500px;
 }

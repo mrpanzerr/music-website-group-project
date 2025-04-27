@@ -31,22 +31,31 @@
     text-decoration: none;
     color: #FFFFFF;
     display: inline-block;
+    padding: 5px 20px;
+    border-radius: 5px;
 }
 
 /* Background color for the sign up button */
-.signup {
-    background-color: #FBB03B;;
+.signup a {
+    background-color: #FBB03B;
 }
 
 /* Background color for the login and logout buttons */
-.login, .logout {
+.log a{
     background-color: #F7931E;
 }
 
-/* Styling for buttons */
-.signup, .login, .logout {
-    padding: 5px 20px;
-    border-radius: 5px;
+/* Hover effect for buttons */
+.log a:hover {
+    box-shadow: 0 0 5px #F7931E;
+}
+
+.signup a:hover {
+    box-shadow: 0 0 5px #F7931E;
+}
+
+.home a:hover {
+    text-shadow: #F7931E 0px 0px 5px;
 }
 
 /* Changing font for the home button */

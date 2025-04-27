@@ -1,5 +1,6 @@
 /**
  Author: Gaetano Panzer
+ Styling: Max Collins
  Date: 4.19.25
  Filename: Navbar.tsx
  
@@ -78,7 +79,7 @@ const Navbar = () => {
 
 				{sessionSet === true && (
 					<div className="loggedin-buttons">
-						<li className="logout">
+						<li className="log">
 							<Link onClick={handleLogout}>Logout</Link>
 						</li>
 					</div>
@@ -87,7 +88,7 @@ const Navbar = () => {
 				{sessionSet === false && (
 					<div className="loggedout-buttons">
 						<li className="signup"><Link to="/create_acct">Sign Up</Link></li>
-						<li className="login"><Link to="/login_page">Login</Link></li>
+						<li className="log"><Link to="/login_page">Login</Link></li>
 					</div>
 				)}
 			</ul>
