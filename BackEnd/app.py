@@ -4,7 +4,8 @@ from flask_bcrypt import Bcrypt
 from main import general_search, get_token, get_auth_header, artist_search, track_search, album_search
 from sqlalchemy import create_engine
 from datetime import datetime
-from db import insert_comment, insert_song, insert_user
+from db import insert_comment, insert_song, insert_user, select_user, check_user
+from sqlalchemy.exc import OperationalError, IntegrityError, SQLAlchemyError
 from dotenv import load_dotenv
 import os
 import json
@@ -45,21 +46,35 @@ def search():
 
     #In this example, "radiohead" is being searched as an artist returning 5 results
     return general_search(token, search_value, data.get("type", "artist"), 5)
-#<<<<<<< HEAD
+
+
+
 @app.route('/createpost', methods=['POST'])
 def create_post():
+    data = request.get_json()
     try :
         data = request.get_json()
-        content = data.get("comment_content")
-        if not content:
+        body = data.get("content")
+        song = data.get("last_segment")
+        if not body:
             return jsonify({'error': 'Please Enter Text'}), 400
-        # with engine.connect() as conn:
-        #     insert_comment(conn, session[])
+        with engine.connect() as conn:
+            insert_comment(conn, 1, song, body)
+            return jsonify({"message" : "Comment Successfully Created"}), 200
     except Exception as e:
         # Catch any exception and return a 500 error with the exception message
         return jsonify({'error': f'Internal server error: {str(e)}'}), 500
-#=======
-    
+
+
+# @app.route("/getposts", methods=["POST"])
+# def get_posts():
+#     data = request.get_json()
+#     songID = data.get("last_segment")
+
+
+
+
+
 # check to see if session is set
 @app.route('/check-session', methods=['GET'])
 def check_session():
@@ -76,7 +91,7 @@ def logout():
     session.clear()
     print(f"Session data: {session}")
     return jsonify({'message': 'Logged out successfully'}), 200
-#>>>>>>> d322053693b329b43f042979b5c5607cd9d159dc
+
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -101,23 +116,22 @@ def signup():
         # Hash the password using bcrypt
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
  
-        session.permanent = True
-        session['email'] = email
-        print(f"Session data: {session}")
-        
-        # Insert user into the database (we'll need to set this part up)
-        #>>>>>>> a82af37f3ebd7d309788fa1edfffb76d0af0ca50
-        # insert_user_into_db(email, username, hashed_password)
-        
-        # If everything went well, return success message
+        with engine.connect() as conn:
+            insert_user(conn,username, hashed_password, email,)
         return jsonify({'message': 'User signed up successfully'}), 201
         
-    except Exception as e:
+    except IntegrityError as e:
+        print(e)
+        with engine.connect() as conn:
+            user_status = check_user(conn, username, email)
         # Catch any exception and return a 500 error with the exception message
-        return jsonify({'error': f'Internal server error: {str(e)}'}), 500
+        return jsonify({'error': user_status}), 500
+
 
 @app.route('/login', methods=['POST'])
 def login():
+
+
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
@@ -125,21 +139,18 @@ def login():
     if not email or not password:
         return jsonify({'error': 'Email and password are required'}), 400
       
-    '''
-    user = User.query.filter_by(email=email).first()
-    
-    if not user or not bcrypt.check_password_hash(user.password, password):
-        return jsonify({"error": "Invalid email or password"}), 401
- 
-    # Check if the provided password matches the hashed one
-    if not user or not bcrypt.check_password_hash(user.password, password):
-        return jsonify({"error": "Invalid email or password"}), 401
-    
-   session.permanent = True
-   session['email'] = email
-   '''
+    with engine.connect() as conn:
+        result = select_user(conn, email)
 
-    return jsonify({"message": "Login successful!"}), 200
+    if result != None and bcrypt.check_password_hash(result[2], password):
+        session['userID'] = result[0]
+        session['username'] = result[1]
+        session['email'] = result[3]
+        return jsonify({"message": "Login successful!"}), 200
+    
+    else:
+        return jsonify({"error" : "Password or Email does not match"}), 404
+    
 
 @app.route('/artist/<id>', methods=['GET'])
 def get_artist(id):

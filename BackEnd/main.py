@@ -206,7 +206,4 @@ def album_search(token, id):
                     }
     return results_list
 
-token = get_token()
-print(general_search(token, "In Rainbows", "album", 1))
-
 

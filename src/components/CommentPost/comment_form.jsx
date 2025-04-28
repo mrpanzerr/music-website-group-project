@@ -17,8 +17,8 @@ export default function CreatePost() {
         fetch("http://127.0.01:5000/createpost", {
             method: "POST",
             credentials: "include",
-            headers : {"Content-Type" : "application.json"},
-            body : JSON.stringify({last_segment, content}),
+            headers : {"Content-Type" : "application/json"},
+            body : JSON.stringify({content, last_segment}),
         });
         console.log(`Attempting to submit ${content,last_segment}`);
         setStatus('unclicked');
@@ -29,6 +29,9 @@ export default function CreatePost() {
         return (<div><button onClick={openCommentForm}>Create Comment</button></div>)
     }
     if (status === 'clicked') {
-        return (<div><input type="text" id="content" placeholder="Enter Comment" value={content} onChange={(e) => setContent(e.target.value)}></input><button id="submit" onClick={submitCommentForm}>Submit</button></div>)
+        return (<div>
+                    <input type="text" id="content" placeholder="Enter Comment" value={content} onChange={(e) => setContent(e.target.value)}></input>
+                    <button id="submit" onClick={submitCommentForm}>Submit</button>
+                </div>)
     }
 }

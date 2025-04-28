@@ -25,6 +25,7 @@
 from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, CHAR, MetaData, Table, DateTime, insert, select
 from dotenv import load_dotenv
 from datetime import datetime
+
 import os
 
 load_dotenv()
@@ -46,15 +47,19 @@ Songs = Table(
     Column('songID', String(200), primary_key=True)
 )
 
+
 Users = Table(
     "Users",
     meta,
     Column('userID', Integer, primary_key=True, autoincrement=True),
     Column('username', String(20), unique=True, nullable=False),
     Column('password', String(50), nullable=False),
+    Column('email', String(100), nullable=False),
     Column('date_joined', DateTime, default=datetime.utcnow),
     Column('bio', String(200), default="No Bio")
 )
+
+
 Comments = Table(
     "Comments",
     meta,
@@ -99,14 +104,18 @@ def insert_song(conn, song_id):
     Expected output: A success message indicating the ID of the inserted user.
     Expected extensions/revisions: Extend to handle more user attributes (e.g., email, profile picture).
 """
-def insert_user(conn, username, password):
+def insert_user(conn, username, password, email):
+
     insert_statement = insert(Users).values(
         username=username,
-        password=password
+        password=password,
+        email = email
     )
     result = conn.execute(insert_statement)
     conn.commit()
     return f"User with ID: {result.inserted_primary_key[0]} inserted"
+
+
 
 """
     Method Comment Block: insert_comment
@@ -132,5 +141,30 @@ def insert_comment(conn, user_id, song_id, content, parent_comment_id=None):
     conn.commit()
     return f"comment with ID: {result.inserted_primary_key[0]} inserted"
 
-#5vkqYmiPBYLaalcmjujWxK
-#In Rainbows ID
+def select_user(conn, email):
+    statement = select(Users).where(Users.c.email == email)
+    result = conn.execute(statement).fetchone()
+    return result
+
+def get_posts(conn, song):
+    comment_search = conn.execute(select(Comments).where(Comments.c.songID == song))
+    return [item for item in comment_search]
+
+
+    
+
+def check_user(conn, username, email):
+    user_search = conn.execute(select(Users).where(Users.c.username == username)).fetchone()
+    email_search = conn.execute(select(Users).where(Users.c.email == email)).fetchone()
+    if user_search and email_search:
+        return "Username and Email Already Exist"
+    if user_search:
+        return "Username Already Exists"
+    if email_search:
+        return "Email Already Exists"
+    else:
+        return "No Matches"
+    
+
+with engine.connect() as conn:
+    print(get_posts(conn, "66CXWjxzNUsdJxJ2JdwvnR"))
