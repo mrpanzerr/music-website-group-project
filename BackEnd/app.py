@@ -2,27 +2,14 @@ from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from main import general_search, get_token, get_auth_header, artist_search, track_search, album_search
-from sqlalchemy import create_engine
+from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from db import insert_comment, insert_song, insert_user, select_user, check_user, get_posts
+from db import insert_comment, insert_song, insert_user, select_user, check_user
 from sqlalchemy.exc import OperationalError, IntegrityError, SQLAlchemyError
 from dotenv import load_dotenv
 import os
 import json
 import requests
-
-
-load_dotenv()
-db_password = os.getenv("DB_PASSWORD")
-db_user = 'root'
-db_host = '127.0.0.1'
-db_port = '3306'
-db_name = 'play_back_db'
-
-# Create a connection to the MySQL database using SQLAlchemy
-engine = create_engine(f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}", echo = True)
-
-
 
 token = get_token()
 app = Flask(__name__)
@@ -37,6 +24,14 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'  # Or 'None' if using HTTPS
 app.config['SESSION_COOKIE_SECURE'] = True
 
+
+'''# Define User model for entering into database
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    username = db.Column(db.String(320), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+'''
 
 #If data is fetched from server URL + /search, this data is returned in json format.
 @app.route('/search', methods = ['POST'])
@@ -66,14 +61,10 @@ def create_post():
         return jsonify({'error': f'Internal server error: {str(e)}'}), 500
 
 
-@app.route("/getposts", methods=["POST"])
-def get_posts():
-    data = request.get_json()
-    songID = data.get("last_segment")
-    with engine.connect() as conn:
-        comment_list = get_posts(conn, songID)
-    print(json.dumps(comment_list))
-
+# @app.route("/getposts", methods=["POST"])
+# def get_posts():
+#     data = request.get_json()
+#     songID = data.get("last_segment")
 
 
 
@@ -98,7 +89,6 @@ def logout():
     print(f"Session data: {session}")
     return jsonify({'message': 'Logged out successfully'}), 200
 
-
 @app.route('/signup', methods=['POST'])
 def signup():
     try :
@@ -122,22 +112,23 @@ def signup():
         # Hash the password using bcrypt
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
  
-        with engine.connect() as conn:
-            insert_user(conn,username, hashed_password, email,)
+        session.permanent = True
+        session['email'] = email
+        print(f"Session data: {session}")
+        
+        # Insert user into the database (we'll need to set this part up)
+        #>>>>>>> a82af37f3ebd7d309788fa1edfffb76d0af0ca50
+        # insert_user_into_db(email, username, hashed_password)
+        
+        # If everything went well, return success message
         return jsonify({'message': 'User signed up successfully'}), 201
         
-    except IntegrityError as e:
-        print(e)
-        with engine.connect() as conn:
-            user_status = check_user(conn, username, email)
+    except Exception as e:
         # Catch any exception and return a 500 error with the exception message
-        return jsonify({'error': user_status}), 500
-
+        return jsonify({'error': f'Internal server error: {str(e)}'}), 500
 
 @app.route('/login', methods=['POST'])
 def login():
-
-
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
@@ -146,7 +137,6 @@ def login():
     if not email or not password:
         return jsonify({'error': 'Email and password are required'}), 400
       
-
     with engine.connect() as conn:
         result = select_user(conn, email)
 
@@ -154,7 +144,6 @@ def login():
         session['userID'] = result[0]
         session['username'] = result[1]
         session['email'] = result[3]
-        print(session)
         return jsonify({"message": "Login successful!"}), 200
     
     else:
@@ -180,6 +169,42 @@ def get_track(id):
         return jsonify({'error': 'Track ID is required'}), 400
 
     return track_search(token,id)
+        # headers = get_auth_header(token)
+        # url = f"https://api.spotify.com/v1/artists/{id}"
+        # response = requests.get(url, headers=headers)
+
+        # if response.status_code == 200:
+        #     try:
+        #         data = response.json()  # Parse the JSON response
+                
+        #         # Check if 'name', 'id', and 'popularity' are returned
+        #         artist_name = data.get('name', 'Unknown')
+        #         artist_id = data.get('id', 'Unknown')
+        #         artist_genres = data.get('genres', [])
+        #         artist_popularity = data.get('popularity', 'Unknown')
+
+        #         # Handle empty genres array
+        #         if not artist_genres:
+        #             artist_genres = ['No genres available']
+
+        #         # Format the artist info to return
+        #         artist_info = {
+        #             "name": artist_name,
+        #             "id": artist_id,
+        #             "genres": artist_genres,
+        #             "popularity": artist_popularity
+        #         }
+
+        #         return jsonify(artist_info)
+
+    #         except ValueError:
+    #             return jsonify({'error': 'Invalid JSON response from Spotify'}), 500
+    #     elif response.status_code == 404:
+    #         return jsonify({'error': 'Artist not found'}), 404
+    #     else:
+    #         return jsonify({'error': f'Error fetching artist data. Status code: {response.status_code}'}), 500
+    # except Exception as e:
+    #     return jsonify({'error': f'Internal server error: {str(e)}'}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,6 +1,7 @@
 /**
 Component: PageTemplate  
 Author: Ryan Ferrel
+Styling: Max Collins
 Date Created: 04.10.2025  
 Last Revised: 04.18.2025  
 
@@ -33,19 +34,11 @@ Future Revisions or Extensions:
 
 **/
 import React from 'react';
+import './PageTemplate.css';
 import { useParams } from 'react-router-dom';
-import CreatePost from '../CommentPost/comment_form.jsx'
 
-
-
+// This component will receive the data as props and display it
 const PageTemplate = ({ data }) => {
-
-    const handleClick = () => {
-        console.log("pressed")
-    }
-
-
-
     let artistData, trackData, albumData, type;
 
     if (data.type === "artist") {
@@ -62,30 +55,36 @@ const PageTemplate = ({ data }) => {
     const { artistname, followers, artistimage, genres = [], toptracks = []} = artistData || {};
     const { trackname, trackalbumname, trackalbumid, trackalbumtype, trackimage, trackreleasedate, trackartists = []} = trackData || {};
     const { albumname, albumtype, tracknumber, albumimage,  albumreleasedate, albumartists = [], albumtracks = []} = albumData || {};
-//<<<<<<< HEAD
-//=======
     console.log(artistimage)
     // Default to empty array if artist is missing
     // Fallback for missing or malformed image
-//>>>>>>> d322053693b329b43f042979b5c5607cd9d159dc
 
+    // Ensure 'artist' is always an array, and provide default values if it's missing
 
     return (
         <div className="page-template">
-			<CreatePost />
+
+			{/* Header Section */}
+			<div className="page-header">
+				<h1 className="sideB">Side B</h1>
+				<div className="arrow-container">
+					<div className="arrow-body"></div>
+					<div className="arrow-head"></div>
+				</div>
+			</div>
+
             {type === "artist" && (
-			  <section className="artistDetails flex flex-col gap-6">
+			  <section className="artistDetails">
 				{/* Artist Header */}
-				<div className="flex gap-4">
-				  <h1>{artistname}</h1>
-				  <div className="artistImage w-1/3 max-w-xs">
+				<h1 className="titleHeader">-{artistname}-</h1>
+				<div className="flex-artist">
+				  <div className="artistImage">
 					<img
 					  src={artistimage}
 					  alt={`${artistname}`}
-					  className="w-full h-auto rounded-xl shadow-md object-cover"
 					/>
 				  </div>
-				  <ul className="artistInfo flex-1 space-y-2">
+				  <ul className="artistInfo">
 					<li><strong>Spotify Followers:</strong> {followers.toLocaleString()}</li>
 					{genres > 0 ? (
 						<li>
@@ -100,56 +99,55 @@ const PageTemplate = ({ data }) => {
 					)}
 				  </ul>
 				</div>
-
+				<div className="divider"></div>
 				{/* Top Tracks Section */}
-				<div className="artistTopTracks mt-6">
-				  <h2 className="text-lg font-semibold mb-2">Top Tracks</h2>
-				  <ul className="topTracks flex flex-col gap-3">
+				<div className="artistTopTracks">
+				  <h2 className="tracksHeader">-Top Tracks-</h2>
+				  <ul className="topTracks">
 					{toptracks.slice(0, 10).map(([trackName, trackId, albumImage, albumId], index) => (
-					  <li key={index} className="flex items-center gap-4 p-2 rounded-md hover:bg-gray-100 transition">
-						<a href={`/album/${albumId}`} className="w-12 h-12 flex-shrink-0">
+					  <li key={index} className="flex">
+						<a href={`/album/${albumId}`}>
 						  <img
 							src={albumImage}
 							alt={`${trackName} album cover`}
-							className="w-full h-full object-cover rounded"
 						  />
 						</a>
-						<a href={`/track/${trackId}`} className="text-blue-600 hover:underline">
+						<a href={`/track/${trackId}`}>
 						  {trackName}
 						</a>
 					  </li>
 					))}
 				  </ul>
 				</div>
-				
-				{}
+
+				{/* <Thoughts /> -- This will be the posting/comment component */}
 			  </section>
 			)}
 
             {type === "track" && (
-			  <section className="trackDetails flex flex-col gap-4">
-				<div className="flex gap-4">
-				  <div className="trackImage w-1/3 max-w-xs">
+			  <section className="trackDetails">
+				<h1 className="titleHeader">-{trackname}-</h1>
+				<div className="flex">
+				  <div className="trackImage">
 					<img
 					  src={trackimage}
 					  alt={`${trackname} cover`}
-					  className="w-full h-auto rounded-xl shadow-md"
 					/>
 				  </div>
-				  <ul className="trackInfo flex-1 space-y-2">
+				  <ul className="trackInfo">
 					<li><strong>Track Name:</strong> {trackname}</li>
 					<li>
 					  <strong>Album:</strong>{' '}
-					  <a href={`/album/${trackalbumid}`} className="text-blue-600 hover:underline">
+					  <a href={`/album/${trackalbumid}`}>
 						{trackalbumname}
 					  </a>
 					</li>
 					<li>
 					  <strong>Artists:</strong>
-					  <ul className="trackArtists list-disc list-inside">
+					  <ul className="trackArtists">
 						{trackartists.map(([name, id], index) => (
 						  <li key={index}>
-							<a href={`/artist/${id}`} className="text-blue-600 hover:underline">
+							<a href={`/artist/${id}`}>
 							  {name}
 							</a>
 						  </li>
@@ -165,52 +163,37 @@ const PageTemplate = ({ data }) => {
 			)}
 
             {type === "album" && (
-//<<<<<<< HEAD
-                <ul>
-                    <li>Name: {albumname}</li>
-                    <li>Album Type: {albumtype}</li>
-                    <li>Number of Tracks: {tracknumber}</li>
-                    <li><img src={albumimage}></img></li>
-                    <li>Album Release Date: {albumreleasedate}</li>
-                    <li>Artists: <ul className="albumArtists">
-                        {albumartists.map((artist,index) => (
-                            <li key={index}>{artist[0]}</li>
-                        ))}
-                    </ul></li>
-                    <li>Tracks: <ul className="albumTracks">
-                        {albumtracks.map((track,index) => (
-                            <a href={`/track/${track[1]}`}><li key={index}>{track[0]}</li></a>
-                        ))}
-                    </ul></li>
-                </ul>
-            )}
-
-
-				<section className="albumDetails flex flex-col gap-4">
-					<div className="flex gap-4">
-						<div className="albumImage w-1/3 max-w-xs">
-							<h1>{albumname}</h1>
-							<img src={albumimage} alt={`${albumname} cover`} className="w-full h-auto rounded-xl shadow-md" />
+				<section className="albumDetails">
+					<h1 className="titleHeader">-{albumname}-</h1>
+					<div className="flex">
+						<div className="albumImage">
+							<img src={albumimage} alt={`${albumname} cover`}/>
 						</div>
-						<ul className="albumInfo flex-1 space-y-2">
+						<ul className="albumInfo">
+							<li><strong>Album Name:</strong> {albumname}</li>
 							<li>
 								<strong>Artists:</strong>
-								<ul className="albumArtists list-disc list-inside">{albumartists.map(([name], index) => (
-									<li key={index}>{name}</li>
-								))}
+								<ul className="albumArtists">
+									{albumartists.map(([name, id], index) => (
+						  			<li key={index}>
+										<a href={`/artist/${id}`}>
+							  				{name}
+										</a>
+						  	</li>
+						))}
 								</ul>
 							</li>
 							<li><strong>Number of Tracks:</strong> {tracknumber}</li>
 							<li><strong>Release Date:</strong> {albumreleasedate}</li>
 						</ul>
 					</div>
-
-					<div className="albumTracksSection mt-6">
-						<h2 className="text-lg font-semibold mb-2">Tracks</h2>
-						<ul className="albumTracks list-decimal list-inside space-y-1">
+					<div className="divider"></div>
+					<div className="tracksSection">
+						<h2 className="tracksHeader">-Tracks-</h2>
+						<ul className="albumTracks">
 							{albumtracks.map(([trackName, trackId], index) => (
 							<li key={index}>
-								<a href={`/track/${trackId}`} className="text-blue-600 hover:underline">
+								<a href={`/track/${trackId}`}>
 								{trackName}
 								</a>
 							</li>
@@ -218,7 +201,10 @@ const PageTemplate = ({ data }) => {
 						</ul>
 					</div>
 
+					{/* <Thoughts /> -- This will be the posting/comment component */}
 				</section>
+			)};
+			<div className="page-footer"></div>
         </div>
     );
 };

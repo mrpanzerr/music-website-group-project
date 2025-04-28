@@ -1,5 +1,6 @@
 /*
   Author: Ryan Ferrel
+  Styling: Max Collins
   Date: 4.3.25
   Filename: search_bar.tsx
   
@@ -24,6 +25,7 @@
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './search_bar.css';
 
 export default function GetData() {
     const [data, setData] = useState<{ name: string, image: string, type: string, artist: string[], id: string, album: string }[]>([]);
@@ -179,18 +181,20 @@ export default function GetData() {
 
     return (
         <>
-            <button id="artist" onClick={handleClick}>Artist</button>
-            <button id="track" onClick={handleClick}>Track</button>
-            <button id="album" onClick={handleClick}>Album</button>
-            <button id="submit" onClick={handleSearch}>Search</button>
             <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
-                <input 
+                <input className="search-bar"
                     type="text" 
                     value={search} 
                     onChange={(e) => setSearch(e.target.value)} 
                     placeholder="Search for music..." 
                 />
             </form>
+            <div className="search-type-buttons">
+                <button id="artist" onClick={handleClick}>Artist</button>
+                <button id="track" onClick={handleClick}>Track</button>
+                <button id="album" onClick={handleClick}>Album</button>
+                <button id="submit" onClick={handleSearch}>Search</button>
+            </div>
             <ul className="list-group">
                 {data && data.map((item, index) => (
 					<li

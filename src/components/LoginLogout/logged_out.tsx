@@ -1,5 +1,6 @@
 /**
-Author: Gaetano Panzer  
+Author: Gaetano Panzer
+Styling: Max Collins
 Date: 4.6.25  
 Filename: logged_out.tsx  
 
@@ -34,6 +35,7 @@ Future Extensions or Revisions:
 
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import './login_logout.css';
 
 const LoggedOutPage = () => {
 	const location = useLocation();
@@ -42,7 +44,7 @@ const LoggedOutPage = () => {
 	if (!fromLogout) {
 		// They didn’t come here via the intended path
 		return (
-			<div>
+			<div className="result-page">
 				<h2>Oops!</h2>
 				<p>You’ve reached this page in error. Try signing up or logging in.</p>
 			</div>
@@ -50,7 +52,7 @@ const LoggedOutPage = () => {
 	}
 
 	return (
-		<div>
+		<div className="result-page">
 			<h2>Logged out successfully!</h2>
 			<p>Come back soon</p>
 			{/* Optional: Add a link to the login page or explore content */}
