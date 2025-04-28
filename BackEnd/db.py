@@ -23,9 +23,10 @@
 """
 
 from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, CHAR, MetaData, Table, DateTime, insert, select
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 from datetime import datetime
-
 import os
 
 load_dotenv()
@@ -44,9 +45,8 @@ meta = MetaData()
 Songs = Table(
     "Songs",
     meta,
-    Column('songID', String(200), primary_key=True)
+    Column('songID', Integer, primary_key=True, autoincrement=True)
 )
-
 
 Users = Table(
     "Users",
@@ -54,11 +54,20 @@ Users = Table(
     Column('userID', Integer, primary_key=True, autoincrement=True),
     Column('username', String(20), unique=True, nullable=False),
     Column('password', String(50), nullable=False),
-    Column('email', String(100), nullable=False),
     Column('date_joined', DateTime, default=datetime.utcnow),
     Column('bio', String(200), default="No Bio")
 )
 
+Posts = Table(
+    "Posts",
+    meta,
+    Column('postID', Integer, primary_key=True, autoincrement=True),
+    Column('date_posted', DateTime, default=datetime.utcnow),
+    Column('header', String(100), nullable=False),
+    Column('content', String(300), nullable=False),
+    Column('userID', Integer, ForeignKey('Users.userID'), nullable=False),
+    Column('songID', Integer, ForeignKey('Songs.songID'), nullable=False)
+)
 
 Comments = Table(
     "Comments",
@@ -66,8 +75,8 @@ Comments = Table(
     Column('commentID', Integer, primary_key=True, autoincrement=True),
     Column('content', String(200), nullable=False),
     Column('date_commented', DateTime, default=datetime.utcnow),
+    Column('postID', Integer, ForeignKey('Posts.postID'), ),
     Column('userID', Integer, ForeignKey('Users.userID'), nullable=False),
-    Column('songID', String(200), ForeignKey('Songs.songID'), nullable=True),
     Column('parent_commentID', Integer, ForeignKey('Comments.commentID'))
 )
 
@@ -83,10 +92,8 @@ Comments = Table(
     Expected output: A success message indicating the ID of the inserted song.
     Expected extensions/revisions: Extend to handle more song attributes (e.g., artist, album).
 """
-def insert_song(conn, song_id):
-    insert_statement = insert(Songs).values(
-        songID = song_id
-    )
+def insert_song(conn):
+    insert_statement = insert(Songs).values()
     result = conn.execute(insert_statement)
     conn.commit()
     return f"Song with ID:{result.inserted_primary_key[0]} inserted"
@@ -104,18 +111,38 @@ def insert_song(conn, song_id):
     Expected output: A success message indicating the ID of the inserted user.
     Expected extensions/revisions: Extend to handle more user attributes (e.g., email, profile picture).
 """
-def insert_user(conn, username, password, email):
-
+def insert_user(conn, username, password):
     insert_statement = insert(Users).values(
         username=username,
-        password=password,
-        email = email
+        password=password
     )
     result = conn.execute(insert_statement)
     conn.commit()
     return f"User with ID: {result.inserted_primary_key[0]} inserted"
 
-
+"""
+    Method Comment Block: insert_post
+    Purpose: Inserts a new post into the Posts table.
+    Author: Ryan Ferrel
+    Written on: 4.8.25
+    Revised on: N/A
+    Called when: This method is called when a new post is being inserted into the database.
+    Where it fits: It is part of the database operations, handling the insertion of post data.
+    Data Structures/Algorithms: Uses SQLAlchemy's insert statement to insert a new post record.
+    Expected input: Connection object to the database, user ID, song ID, post header, and post content.
+    Expected output: A success message indicating the ID of the inserted post.
+    Expected extensions/revisions: Extend to handle more post attributes (e.g., tags, media).
+"""
+def insert_post(conn, user_id, song_id, header, content):
+    insert_statement = insert(Posts).values(
+        userID=user_id,
+        songID=song_id,
+        header=header,
+        content=content
+    )
+    result = conn.execute(insert_statement)
+    conn.commit()
+    return f"Post with ID: {result.inserted_primary_key[0]} inserted"
 
 """
     Method Comment Block: insert_comment
@@ -130,41 +157,13 @@ def insert_user(conn, username, password, email):
     Expected output: A success message indicating the ID of the inserted comment.
     Expected extensions/revisions: Extend to handle comment upvoting/downvoting or additional features.
 """
-def insert_comment(conn, user_id, song_id, content, parent_comment_id=None):
+def insert_comment(conn, user_id, post_id, content, parent_comment_id=None):
     insert_statement = insert(Comments).values(
         userID=user_id,
-        songID=song_id,
+        postID=post_id,
         content=content,
-        parent_commentID=parent_comment_id
+        parent_comment_id=parent_comment_id
     )
     result = conn.execute(insert_statement)
     conn.commit()
     return f"comment with ID: {result.inserted_primary_key[0]} inserted"
-
-def select_user(conn, email):
-    statement = select(Users).where(Users.c.email == email)
-    result = conn.execute(statement).fetchone()
-    return result
-
-def get_posts(conn, song):
-    comment_search = conn.execute(select(Comments).where(Comments.c.songID == song))
-    return [item for item in comment_search]
-
-
-    
-
-def check_user(conn, username, email):
-    user_search = conn.execute(select(Users).where(Users.c.username == username)).fetchone()
-    email_search = conn.execute(select(Users).where(Users.c.email == email)).fetchone()
-    if user_search and email_search:
-        return "Username and Email Already Exist"
-    if user_search:
-        return "Username Already Exists"
-    if email_search:
-        return "Email Already Exists"
-    else:
-        return "No Matches"
-    
-
-with engine.connect() as conn:
-    print(get_posts(conn, "66CXWjxzNUsdJxJ2JdwvnR"))

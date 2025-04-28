@@ -1,0 +1,39 @@
+/* 
+* Author: Max Collins
+* Date: 4/27/2025
+* Description: CSS file for logged_in.tsx and logged_out.tsx
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Baumans&display=swap");
+
+.result-page {
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #FFFFFF;
+}
+
+.result-page h2 {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+.result-page p {
+    font-size: 30px;
+}
+
+.changed-font {
+    font-family: "Baumans", sans-serif;
+    text-decoration: none;
+}
+
+.result-page a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.result-page a:hover {
+    text-shadow: #F7931E 0px 0px 5px;
+}

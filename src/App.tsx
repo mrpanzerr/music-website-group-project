@@ -1,5 +1,5 @@
 /*
- * Author: Gaetano Panzer, Ryan Ferrel, Max Stone
+ * Author: Gaetano Panzer, Ryan Ferrel, Max Collins
  * Date: 4.19.25
  * Filename: App.tsx
  * Purpose: Defines the routing and layout for the frontend React application
@@ -24,11 +24,12 @@ import ArtistPage from './components/Templates/ArtistPage';
 import TrackPage from './components/Templates/TrackPage';
 import AlbumPage from './components/Templates/AlbumPage';
 import Navbar from './components/navbar';
+import './App.css';
 
 
 /*
  * Purpose: Layout component controls overall structure and home page behavior
- * Author: Gaetano Panzer, Ryan Ferrel, Max Stone
+ * Author: Gaetano Panzer, Ryan Ferrel, Max Collins
  * Written: 4.4.25
  * Revised: 4.19.25
  * Called From: App component, rendered inside <Router>
@@ -43,38 +44,65 @@ function Layout() {
 	const isHome = location.pathname === "/";
 	
 	return(
-		<div>		
-			{/* Only show welcome + GetData on home */}
-			{isHome && (
-				<header>
-					<h1>Welcome to PlayBack!</h1>
-					<p>Your uninhibited music journey</p>
-					<GetData />
-				</header>
-				)
-			}
-			<Navbar />
-	
-	<section>
-        <Routes>
-          <Route path="/" element={null} />
-          <Route path="/create_acct" element={<CreateAcctPage />} />
-          <Route path="/acct_created_page" element={<AcctCreatedPage />} />
-          <Route path="/login_page" element={<LoginPage />} />
-          <Route path="/logged_in" element={<LoggedInPage />} />
-		  <Route path="/logged_out" element={<LoggedOutPage />} />
-		  <Route path="/artist/:id" element={<ArtistPage />} />
-		  <Route path="/track/:id" element={<TrackPage />} />
-		  <Route path="/album/:id" element={<AlbumPage />} />
-        </Routes>
-      </section>
+		<div className="page-background">
+			<div className="orange-border">	
+				{/* Only show welcome + GetData on home */}
+				<div className="navbar">
+					<Navbar />
+				</div>
+				{isHome && (
+					<header>
+						<div className="page-header">
+							<h1 className="sideB">Side A</h1>
+							<div className="arrow-container">
+								<div className="arrow-body"></div>
+								<div className="arrow-head"></div>
+							</div>
+						</div>
+						<div className="center">
+							<div className="casette-base">
+								<div className="casette-screw top-left"></div>
+								<div className="casette-screw top-right"></div>
+								<div className="casette-screw bottom-left"></div>
+								<div className="casette-screw bottom-right"></div>
+								<div className="casette-bottom"></div>
+								<div className="casette-content">
+									<h1 className="logo-text">PlayBack</h1>
+									<div className="casette-underline"></div>
+									<div className="casette-gap">
+										<GetData />
+									</div>
+									<div className="casette-colorline top"></div>
+									<div className="casette-colorline middle"></div>
+									<div className="casette-colorline bottom"></div>
+								</div>
+							</div>
+						</div>
+						<div className="page-footer"></div>
+					</header>
+					)
+				}
+		<section>
+			<Routes>
+			<Route path="/" element={null} />
+			<Route path="/create_acct" element={<CreateAcctPage />} />
+			<Route path="/acct_created_page" element={<AcctCreatedPage />} />
+			<Route path="/login_page" element={<LoginPage />} />
+			<Route path="/logged_in" element={<LoggedInPage />} />
+			<Route path="/logged_out" element={<LoggedOutPage />} />
+			<Route path="/artist/:id" element={<ArtistPage />} />
+			<Route path="/track/:id" element={<TrackPage />} />
+			<Route path="/album/:id" element={<AlbumPage />} />
+			</Routes>
+		</section>
+	  </div>
     </div>
   );
 }
 
 /*
  * Purpose: Main App component that initializes React Router
- * Author: Gaetano Panzer, Ryan Ferrel, Max Stone
+ * Author: Gaetano Panzer, Ryan Ferrel, Max Collins
  * Written: 4.1.25
  * Revised: 4.19.25
  * Called From: Entry point (main.tsx or index.tsx)

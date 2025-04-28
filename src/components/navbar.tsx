@@ -1,5 +1,6 @@
 /**
  Author: Gaetano Panzer
+ Styling: Max Collins
  Date: 4.19.25
  Filename: Navbar.tsx
  
@@ -22,6 +23,7 @@
 
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import './navbar.css';
 
 const Navbar = () => {
 	const [sessionSet, setSessionSet] = useState<boolean | null>(null);
@@ -69,25 +71,28 @@ const Navbar = () => {
 	};
 
 	return (
-		<nav>
-			<ul>
-				<li><Link to="/">Home</Link></li>
+		<nav className="navbar">
+			<ul className="buttons">
+				<li className="home"><Link to="/">PlayBack</Link></li>
 
 				{sessionSet === null && <li></li>}
 
 				{sessionSet === true && (
-					<li>
-						<Link onClick={handleLogout}>Logout</Link>
-					</li>
+					<div className="loggedin-buttons">
+						<li className="log">
+							<Link onClick={handleLogout}>Logout</Link>
+						</li>
+					</div>
 				)}
 
 				{sessionSet === false && (
-					<>
-						<li><Link to="/create_acct">Create Account</Link></li>
-						<li><Link to="/login_page">Login</Link></li>
-					</>
+					<div className="loggedout-buttons">
+						<li className="signup"><Link to="/create_acct">Sign Up</Link></li>
+						<li className="log"><Link to="/login_page">Login</Link></li>
+					</div>
 				)}
 			</ul>
+			<div className="line"></div>
 		</nav>
 	);
 };

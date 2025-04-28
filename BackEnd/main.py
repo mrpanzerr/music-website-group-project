@@ -143,8 +143,7 @@ def artist_search(token, id):
                     "followers" : dataresult.get("followers", {}).get("total", 0),
                     "artistimage" : dataresult.get("images",[{"url" : "images/no_result.png"}])[0].get("url", ""),
                     "genres" : dataresult.get("genres",[]),
-                    "toptracks" : [[item.get("name","NoName"),item.get("id","NoID"),item.get("album",{}).get("images",[{"url" : "images/no_result.png"}])[0].get("url", ""),item.get("album", {}).get("id", "NoAlbumID")] for item in trackresult.get("tracks",[])]
-                    }
+                    "toptracks" : [[item.get("name","NoName"),item.get("id","NoID"),item.get("album",{}).get("images",[{"url" : "images/no_result.png"}])[0].get("url", ""),item.get("album", {}).get("id", "NoAlbumID")] for item in trackresult.get("tracks",[])]}
     
     return json.dumps(results_list)
 
@@ -173,8 +172,7 @@ def track_search(token, id):
                     "trackalbumid" : result.get("album", {}).get("id", "NoAlbumID"),
                     "trackimage" : result.get("album", {}).get("images", [{"url" : "images/no_result.png"}])[0].get("url",""),
                     "trackreleasedate" : result.get("album", {}).get("release_date","NoRelaseDate"),
-                    "trackartists" : [[item.get("name", "NoName"),item.get("id","NoID")] for item in result.get("artists",{})]
-                    }
+                    "trackartists" : [[item.get("name", "NoName"),item.get("id","NoID")] for item in result.get("artists",{})]}
     return json.dumps(results_list)
 
 def album_search(token, id):
@@ -205,5 +203,9 @@ def album_search(token, id):
                     "albumtracks" : [[item.get("name","NoTrackName"),item.get("id","NoTrackID")]for item in result.get("tracks",[{}]).get("items",[])]
                     }
     return results_list
+token = get_token()
+print(track_search(token, "11dFghVXANMlKmJXsNCbNl"))
+
+    
 
 

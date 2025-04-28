@@ -27,7 +27,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     height: '100vh',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#363333',
   },
   signupForm: {
     backgroundColor: 'white',

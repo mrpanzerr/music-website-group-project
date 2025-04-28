@@ -1,0 +1,69 @@
+/* 
+* Author: Max Collins
+* Date: 4/28/2025
+* Description: CSS file for search_bar.tsx
+*/
+
+/* General button styling */
+button {
+    width: 80px;
+    height: 40px;
+    background-color: #4D4D4D;
+    color: #FFFFFF;
+    text-shadow: #333333 1px 1px 1px;
+}
+
+/* Rounding button bottom corners */
+button:first-child {
+    border-bottom-left-radius: 12px;
+}
+
+button:last-child {
+    border-bottom-right-radius: 12px;
+}
+
+/* Button effects */
+button:hover {
+    background-color: #FBB03B;
+}
+
+button:focus {
+    background-color: #FBB03B;
+}
+
+/* Styling for the search bar */
+.search-bar {
+    position: relative;
+    background-color: #333333;
+    border-style: solid;
+    width: 420px;
+    height: 90px;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 25px;
+    color: #FFFFFF;
+}
+
+.search-bar:focus {
+    color: #FFFFFF;
+}
+
+.search-bar:placeholder-shown {
+    font-family: "Baumans", sans-serif;
+}
+
+.search-type-buttons {
+    position: relative;
+    left: 12%;
+}
+
+/* Search results list styling */
+.list-group {
+    position: relative;
+    top: 5%;
+    margin-top: 5px;
+}
+
+.list-group li {
+    margin-top: -5px;
+}
