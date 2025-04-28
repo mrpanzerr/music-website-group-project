@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 from main import general_search, get_token, get_auth_header, artist_search, track_search, album_search
 from sqlalchemy import create_engine
 from datetime import datetime
-from db import insert_comment, insert_song, insert_user, select_user, check_user
+from db import insert_comment, insert_song, insert_user, select_user, check_user, get_posts
 from sqlalchemy.exc import OperationalError, IntegrityError, SQLAlchemyError
 from dotenv import load_dotenv
 import os
@@ -66,10 +66,14 @@ def create_post():
         return jsonify({'error': f'Internal server error: {str(e)}'}), 500
 
 
-# @app.route("/getposts", methods=["POST"])
-# def get_posts():
-#     data = request.get_json()
-#     songID = data.get("last_segment")
+@app.route("/getposts", methods=["POST"])
+def get_posts():
+    data = request.get_json()
+    songID = data.get("last_segment")
+    with engine.connect() as conn:
+        comment_list = get_posts(conn, songID)
+    print(json.dumps(comment_list))
+
 
 
 
@@ -78,6 +82,8 @@ def create_post():
 # check to see if session is set
 @app.route('/check-session', methods=['GET'])
 def check_session():
+    print("=================")
+    print(session)
     if 'email' in session:
         print(f"Session data: {session}")
         return jsonify({"sessionSet": True})
@@ -136,9 +142,11 @@ def login():
     email = data.get('email')
     password = data.get('password')
 
+
     if not email or not password:
         return jsonify({'error': 'Email and password are required'}), 400
       
+
     with engine.connect() as conn:
         result = select_user(conn, email)
 
@@ -146,6 +154,7 @@ def login():
         session['userID'] = result[0]
         session['username'] = result[1]
         session['email'] = result[3]
+        print(session)
         return jsonify({"message": "Login successful!"}), 200
     
     else:
