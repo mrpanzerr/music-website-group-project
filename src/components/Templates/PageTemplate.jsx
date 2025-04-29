@@ -35,6 +35,7 @@ Future Revisions or Extensions:
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import CreatePost from '../CommentPost/comment_form.jsx'
+import CommentDisplay from '../CommentPost/display_comments';
 
 
 
@@ -73,6 +74,7 @@ const PageTemplate = ({ data }) => {
     return (
         <div className="page-template">
 			<CreatePost />
+			<CommentDisplay />
             {type === "artist" && (
 			  <section className="artistDetails flex flex-col gap-6">
 				{/* Artist Header */}

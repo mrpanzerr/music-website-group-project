@@ -53,7 +53,7 @@ Users = Table(
     meta,
     Column('userID', Integer, primary_key=True, autoincrement=True),
     Column('username', String(20), unique=True, nullable=False),
-    Column('password', String(50), nullable=False),
+    Column('password', String(100), nullable=False),
     Column('email', String(100), nullable=False),
     Column('date_joined', DateTime, default=datetime.utcnow),
     Column('bio', String(200), default="No Bio")
@@ -84,12 +84,15 @@ Comments = Table(
     Expected extensions/revisions: Extend to handle more song attributes (e.g., artist, album).
 """
 def insert_song(conn, song_id):
-    insert_statement = insert(Songs).values(
-        songID = song_id
-    )
-    result = conn.execute(insert_statement)
-    conn.commit()
-    return f"Song with ID:{result.inserted_primary_key[0]} inserted"
+    try:
+        insert_statement = insert(Songs).values(
+            songID = song_id
+        )
+        result = conn.execute(insert_statement)
+        conn.commit()
+        return f"Song with ID:{result.inserted_primary_key[0]} inserted"
+    except Exception:
+        return f"Song with ID: {song_id} already exists"
 
 """
     Method Comment Block: insert_user
@@ -146,9 +149,17 @@ def select_user(conn, email):
     result = conn.execute(statement).fetchone()
     return result
 
-def get_posts(conn, song):
+
+def select_user_id(conn, id):
+    user_search = conn.execute(select(Users.c.username).where(Users.c.userID == id)).fetchone()
+    if user_search != None:
+        return user_search[0]
+    else:
+        "not found"
+
+def get_song_posts(conn, song):
     comment_search = conn.execute(select(Comments).where(Comments.c.songID == song))
-    return [item for item in comment_search]
+    return comment_search
 
 
     
@@ -167,4 +178,7 @@ def check_user(conn, username, email):
     
 
 with engine.connect() as conn:
-    print(get_posts(conn, "66CXWjxzNUsdJxJ2JdwvnR"))
+    # for i in get_posts(conn, "66CXWjxzNUsdJxJ2JdwvnR"):
+    #     print(i)
+    print("[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]")
+    print(select_user_id(conn, 1))

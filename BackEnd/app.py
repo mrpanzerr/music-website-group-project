@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 from main import general_search, get_token, get_auth_header, artist_search, track_search, album_search
 from sqlalchemy import create_engine
 from datetime import datetime
-from db import insert_comment, insert_song, insert_user, select_user, check_user, get_posts
+from db import insert_comment, insert_song, insert_user, select_user, check_user, get_song_posts, select_user_id
 from sqlalchemy.exc import OperationalError, IntegrityError, SQLAlchemyError
 from dotenv import load_dotenv
 import os
@@ -52,9 +52,9 @@ def search():
 
 @app.route('/createpost', methods=['POST'])
 def create_post():
-    data = request.get_json()
     try :
         data = request.get_json()
+        print(data)
         body = data.get("content")
         song = data.get("last_segment")
         if not body:
@@ -72,8 +72,10 @@ def get_posts():
     data = request.get_json()
     songID = data.get("last_segment")
     with engine.connect() as conn:
-        results = get_posts(songID)
-    
+        results = get_song_posts(conn, songID)
+        submit = [{"id" : item[0], "content" : item[1], "date" : item[2], "username" : select_user_id(conn,item[3]), "parent_comment" : item[5]} for item in results]
+        print("THIS IS WHAT IS BEING SUBMITTED", submit)
+        return submit
 
 
 
@@ -163,20 +165,24 @@ def login():
 def get_artist(id):
     if not id:
         return jsonify({'error': 'Artist ID is required'}), 400
-
+    with engine.connect() as conn:
+        insert_song(conn, id)
     return artist_search(token,id)
 
 @app.route('/album/<id>', methods=['GET'])
 def get_album(id):
     if not id:
         return jsonify({'error' : 'Album ID is required'}), 400
+    with engine.connect() as conn:
+        insert_song(conn, id)
 
     return album_search(token,id)
 @app.route('/track/<id>', methods=['GET'])
 def get_track(id):
     if not id:
         return jsonify({'error': 'Track ID is required'}), 400
-
+    with engine.connect() as conn:
+        insert_song(conn, id)
     return track_search(token,id)
 
 if __name__ == "__main__":
