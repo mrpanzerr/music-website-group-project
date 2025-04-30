@@ -11,7 +11,7 @@ This component is part of the FrontEnd system. It is designed to be displayed af
 
 Development History:  
 - Written on: 4.6.25  
-- Last revised on: 4.19.25  
+- Last revised on: 4.30.25  
 
 Existence Rationale:  
 This component exists to provide user feedback after a login attempt, informing the user whether they are logged in or need to try logging in again.  
@@ -33,29 +33,40 @@ Future Extensions or Revisions:
 **/
 
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const LoggedInPage = () => {
-	const location = useLocation();
-	const fromLogin = location.state?.fromLogin;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const fromLogin = location.state?.fromLogin;
 
-	if (!fromLogin) {
-		// They didn’t come here via the intended path
-		return (
-			<div>
-				<h2>Oops!</h2>
-				<p>You’ve reached this page in error. Try signing up or logging in.</p>
-			</div>
-		);
-	}
+  // If accessed improperly, display an error message and do nothing further
+  if (fromLogin === undefined) {
+    return (
+      <div>
+        <h2>Oops!</h2>
+        <p>You’ve reached this page in error. Try signing up or logging in.</p>
+      </div>
+    );
+  }
 
-	return (
-		<div>
-			<h2>Logged in successfully!</h2>
-			<p>Welcome back to <strong>PlayBack</strong></p>
-			{/* Optional: Add a link to the login page or explore content */}
-		</div>
-	);
+  // If accessed correctly (from login), show the success message and set up a 5-second redirect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+		navigate('/');  // Redirect to home after 5 seconds
+		window.location.reload();
+    }, 3000);  // 3 seconds delay
+
+    return () => clearTimeout(timer);  // Cleanup timer on component unmount
+
+  }, [navigate]);
+
+  return (
+    <div>
+      <h2>Logged in successfully!</h2>
+      <p>Welcome back to <strong>PlayBack</strong>. You will be redirected to the home page shortly.</p>
+    </div>
+  );
 };
 
-export default LoggedInPage
+export default LoggedInPage;
