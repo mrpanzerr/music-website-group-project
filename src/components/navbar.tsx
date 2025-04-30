@@ -58,7 +58,7 @@ const Navbar = () => {
 			.then(res => {
 				if (res.ok) {
 					setSessionSet(false); // Reflect logout in UI
-					navigate('/logged_out', { state: {fromLoggedOut: true }});
+					navigate('/logged_out', { state: {fromLogout: true }});
 				} else {
 					console.log('Logout failed');
 				}
