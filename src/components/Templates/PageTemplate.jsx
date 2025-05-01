@@ -36,7 +36,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import CreatePost from '../CommentPost/comment_form.jsx'
 import CommentDisplay from '../CommentPost/display_comments';
-
+import TagSection from '../CommentPost/tags'
 
 
 const PageTemplate = ({ data }) => {
@@ -73,8 +73,7 @@ const PageTemplate = ({ data }) => {
 
     return (
         <div className="page-template">
-			<CreatePost />
-			<CommentDisplay />
+			<TagSection />
             {type === "artist" && (
 			  <section className="artistDetails flex flex-col gap-6">
 				{/* Artist Header */}
@@ -167,7 +166,7 @@ const PageTemplate = ({ data }) => {
 			)}
 
             {type === "album" && (
-//<<<<<<< HEAD
+				<section>
                 <ul>
                     <li>Name: {albumname}</li>
                     <li>Album Type: {albumtype}</li>
@@ -185,42 +184,11 @@ const PageTemplate = ({ data }) => {
                         ))}
                     </ul></li>
                 </ul>
+				</section>
             )}
 
 
-				<section className="albumDetails flex flex-col gap-4">
-					<div className="flex gap-4">
-						<div className="albumImage w-1/3 max-w-xs">
-							<h1>{albumname}</h1>
-							<img src={albumimage} alt={`${albumname} cover`} className="w-full h-auto rounded-xl shadow-md" />
-						</div>
-						<ul className="albumInfo flex-1 space-y-2">
-							<li>
-								<strong>Artists:</strong>
-								<ul className="albumArtists list-disc list-inside">{albumartists.map(([name], index) => (
-									<li key={index}>{name}</li>
-								))}
-								</ul>
-							</li>
-							<li><strong>Number of Tracks:</strong> {tracknumber}</li>
-							<li><strong>Release Date:</strong> {albumreleasedate}</li>
-						</ul>
-					</div>
-
-					<div className="albumTracksSection mt-6">
-						<h2 className="text-lg font-semibold mb-2">Tracks</h2>
-						<ul className="albumTracks list-decimal list-inside space-y-1">
-							{albumtracks.map(([trackName, trackId], index) => (
-							<li key={index}>
-								<a href={`/track/${trackId}`} className="text-blue-600 hover:underline">
-								{trackName}
-								</a>
-							</li>
-							))}
-						</ul>
-					</div>
-
-				</section>
+				<CreatePost />
         </div>
     );
 };

@@ -22,7 +22,7 @@
  Expected extensions/revisions: The code may be extended to handle more complex queries or additional table operations.
 """
 
-from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, CHAR, MetaData, Table, DateTime, insert, select
+from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, CHAR, MetaData, Table, DateTime, insert, select, func, update, and_
 from dotenv import load_dotenv
 from datetime import datetime
 
@@ -40,6 +40,13 @@ engine = create_engine(f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_p
 
 meta = MetaData()
 
+Tags = Table(
+    "Tags",
+    meta,
+    Column('tag', String(100)),
+    Column('songID', String(200), ForeignKey('Songs.songID'), primary_key=True),
+    Column('userID', Integer, ForeignKey('Users.userID'), primary_key=True)
+)
 
 Songs = Table(
     "Songs",
@@ -177,8 +184,39 @@ def check_user(conn, username, email):
         return "No Matches"
     
 
-with engine.connect() as conn:
-    # for i in get_posts(conn, "66CXWjxzNUsdJxJ2JdwvnR"):
-    #     print(i)
-    print("[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]")
-    print(select_user_id(conn, 1))
+def insert_tag(conn, value, song, id):
+    if value != "":
+        try:
+            insert_statement = insert(Tags).values(
+                tag=value,
+                songID=song,
+                userID=id
+            )
+            conn.execute(insert_statement)
+            conn.commit()
+            return f"created tag"
+        except Exception:
+            conn.execute(update(Tags).where(and_(Tags.c.userID == id,Tags.c.songID == song)).values(tag=value))
+            conn.commit()
+            return f"updated tag"
+def check_tag(conn, song, user):
+    test = conn.execute(select(Tags).where(and_(Tags.c.songID == song, Tags.c.userID == user))).fetchone()
+    if test != None:
+        return test[0]
+    else:
+        return "No Tag"
+    
+def select_tags_song(conn, song):
+    resultdict = {}
+    results = conn.execute(select(Tags.c.tag, func.count().label('occurrences')).where(Tags.c.songID == song).group_by(Tags.c.tag))
+    for i in results:
+        resultdict.setdefault(i[0],i[1])
+    return resultdict
+
+# with engine.connect() as conn:
+#     print(check_tag(conn, "2nTjd2lNo1GVEfXM3bCnsh", 50))
+#     # for i in range(10,14):
+#     #     create_tag(conn, 'hate', '73cZMVThj3x9ntYUT29hwD', i)
+#     test = select_tags_song(conn, '73cZMVThj3x9ntYUT29hwD')
+#     for i in test:
+#         print(i)
