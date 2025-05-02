@@ -26,7 +26,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './navbar.css';
 
 const Navbar = () => {
-	const [sessionSet, setSessionSet] = useState<boolean | null>(null);
+	const [sessionSet, setSessionSet] = useState<string | null>(null);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -37,7 +37,7 @@ const Navbar = () => {
 		})
 			.then(res => res.json())
 			.then(data => setSessionSet(data.sessionSet))
-			.catch(() => setSessionSet(false));
+			.catch(() => setSessionSet(''));
 	}, []);
 
 	/*
@@ -59,8 +59,8 @@ const Navbar = () => {
 		})
 			.then(res => {
 				if (res.ok) {
-					setSessionSet(false); // Reflect logout in UI
-					navigate('/logged_out', { state: {fromLoggedOut: true }});
+					setSessionSet(''); // Reflect logout in UI
+					navigate('/logged_out', { state: {fromLogout: true }});
 				} else {
 					console.log('Logout failed');
 				}
@@ -77,15 +77,15 @@ const Navbar = () => {
 
 				{sessionSet === null && <li></li>}
 
-				{sessionSet === true && (
+				{sessionSet != '' && (
 					<div className="loggedin-buttons">
 						<li className="log">
-							<Link onClick={handleLogout}>Logout</Link>
+							<Link onClick={handleLogout}>Logout</Link>  <Link to={`/user/${sessionSet}`}>{sessionSet}</Link>
 						</li>
 					</div>
 				)}
 
-				{sessionSet === false && (
+				{sessionSet === '' && (
 					<div className="loggedout-buttons">
 						<li className="signup"><Link to="/create_acct">Sign Up</Link></li>
 						<li className="log"><Link to="/login_page">Login</Link></li>

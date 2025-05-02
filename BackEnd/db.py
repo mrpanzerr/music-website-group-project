@@ -26,6 +26,7 @@ from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, CHAR,
 from dotenv import load_dotenv
 from datetime import datetime
 
+
 import os
 
 load_dotenv()
@@ -123,7 +124,8 @@ def insert_user(conn, username, password, email):
     )
     result = conn.execute(insert_statement)
     conn.commit()
-    return f"User with ID: {result.inserted_primary_key[0]} inserted"
+    return result.inserted_primary_key[0]
+
 
 
 
@@ -157,6 +159,13 @@ def select_user(conn, email):
     return result
 
 
+def select_user_username(conn, user):
+    try:
+        id_search = conn.execute(select(Users.c.userID).where(Users.c.username == user)).fetchone()
+        return id_search[0]
+    except Exception as e:
+        return f'User does exist, error: {e}'
+                             
 def select_user_id(conn, id):
     user_search = conn.execute(select(Users.c.username).where(Users.c.userID == id)).fetchone()
     if user_search != None:
@@ -199,6 +208,7 @@ def insert_tag(conn, value, song, id):
             conn.execute(update(Tags).where(and_(Tags.c.userID == id,Tags.c.songID == song)).values(tag=value))
             conn.commit()
             return f"updated tag"
+
 def check_tag(conn, song, user):
     test = conn.execute(select(Tags).where(and_(Tags.c.songID == song, Tags.c.userID == user))).fetchone()
     if test != None:
@@ -220,3 +230,14 @@ def select_tags_song(conn, song):
 #     test = select_tags_song(conn, '73cZMVThj3x9ntYUT29hwD')
 #     for i in test:
 #         print(i)
+
+def select_user_tags(conn, user):
+    results = conn.execute(select(Tags).where(Tags.c.userID == user))
+    return results
+
+def select_user_comments(conn, user):
+    results = conn.execute(select(Comments).where(Comments.c.userID == user))
+    return results
+
+# with engine.connect() as conn:
+#     print(user_activity())

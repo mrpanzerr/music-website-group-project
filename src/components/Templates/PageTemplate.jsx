@@ -36,6 +36,8 @@ Future Revisions or Extensions:
 import React from 'react';
 import './PageTemplate.css';
 import { useParams } from 'react-router-dom';
+import CreatePost from '../CommentPost/comment_form.jsx'
+import TagSection from '../CommentPost/tags'
 
 // This component will receive the data as props and display it
 const PageTemplate = ({ data }) => {
@@ -71,6 +73,7 @@ const PageTemplate = ({ data }) => {
 					<div className="arrow-body"></div>
 					<div className="arrow-head"></div>
 				</div>
+				<TagSection />
 			</div>
 
             {type === "artist" && (
@@ -204,7 +207,9 @@ const PageTemplate = ({ data }) => {
 					{/* <Thoughts /> -- This will be the posting/comment component */}
 				</section>
 			)};
-			<div className="page-footer"></div>
+			<div className="page-footer">
+				<CreatePost/>
+			</div>
         </div>
     );
 };
