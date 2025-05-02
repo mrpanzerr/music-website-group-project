@@ -3,8 +3,9 @@ from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from main import general_search, get_token, get_auth_header, artist_search, track_search, album_search
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
 from datetime import datetime
-from db import insert_comment, insert_song, insert_user, select_user, check_user
+from db import insert_comment, insert_song, insert_user, select_user, check_user, get_song_posts, select_user_id, select_tags_song, insert_tag, check_tag
 from sqlalchemy.exc import OperationalError, IntegrityError, SQLAlchemyError
 from dotenv import load_dotenv
 import os
@@ -25,13 +26,14 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'None'  # Or 'None' if using HTTPS
 app.config['SESSION_COOKIE_SECURE'] = True
 
 
-'''# Define User model for entering into database
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(50), unique=True, nullable=False)
-    username = db.Column(db.String(320), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-'''
+load_dotenv()
+db_password = os.getenv("DB_PASSWORD")
+db_user = 'root'
+db_host = '127.0.0.1'
+db_port = '3306'
+db_name = 'play_back_db'
+
+engine = create_engine(f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}", echo = True)
 
 #If data is fetched from server URL + /search, this data is returned in json format.
 @app.route('/search', methods = ['POST'])
