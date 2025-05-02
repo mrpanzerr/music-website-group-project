@@ -1,10 +1,10 @@
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
-from main import general_search, get_token, get_auth_header, artist_search, track_search, album_search
+from main import general_search, get_token, get_auth_header, artist_search, track_search, album_search, id_search
 from sqlalchemy import create_engine
 from datetime import datetime
-from db import insert_comment, insert_song, insert_user, select_user, check_user, get_posts
+from db import insert_comment, insert_song, insert_user, select_user, check_user, get_song_posts, select_user_id, select_tags_song, insert_tag, check_tag, select_user_tags, select_user_comments, select_user_username
 from sqlalchemy.exc import OperationalError, IntegrityError, SQLAlchemyError
 from dotenv import load_dotenv
 import os
@@ -28,6 +28,7 @@ token = get_token()
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 CORS(app, supports_credentials=True)
+string_format = "%b-%d-%y %I%p"
 
 app.secret_key = "super-secret-stable-key"
 
@@ -44,36 +45,112 @@ app.config['PERMANENT_SESSION_LIFETIME']
 def search():
     data = request.get_json()
     search_value = data.get("search", "")
-
-    #In this example, "radiohead" is being searched as an artist returning 5 results
     return general_search(token, search_value, data.get("type", "artist"), 5)
 
+@app.route('/usertag',methods=["POST"])
+def user_tag():
+    try:
+        data = request.get_json()
+        song = data.get("songID")
+        with engine.connect() as conn:
+            if session["userID"]:
+                result = check_tag(conn, song, session["userID"])
+                return result
+            else:
+                return "None"
+    except Exception as e:
+        return jsonify({"error" : f"Error found:{e}"})
 
+@app.route('/createtag',methods=["POST"])
+def create_tag():
+    try:
+        data = request.get_json()
+        song = data.get("songID")
+        tag = data.get("tag")
+        with engine.connect() as conn:
+            if session["userID"]:
+                insert_tag(conn, tag, song, session["userID"])
+                return jsonify({"message" : "Tag Created Successfully"}), 200
+            else:
+                return jsonify({"message" : "Must be logged into to add tag."})
+    except Exception as e:
+        return jsonify({"error": f"Error with tag creation: {e}"}), 400
+    
+
+
+@app.route('/gettags', methods=["POST"])
+def get_tags():
+    try:
+        print("TAG END HIT__________________________________")
+        data = request.get_json()
+        song = data.get("songID")
+        with engine.connect() as conn:
+            result = select_tags_song(conn, song)
+            result.setdefault("exists", check_tag(conn, song, session["userID"]))
+            return result
+    except Exception as e:
+        return f"Failed to fetch tags, error: {e}"
+    
 
 @app.route('/createpost', methods=['POST'])
 def create_post():
-    data = request.get_json()
     try :
         data = request.get_json()
+        print(data)
         body = data.get("content")
+        parent_comment = data.get("parent_comment")
         song = data.get("last_segment")
         if not body:
             return jsonify({'error': 'Please Enter Text'}), 400
         with engine.connect() as conn:
-            insert_comment(conn, 1, song, body)
-            return jsonify({"message" : "Comment Successfully Created"}), 200
+            insert_comment(conn, session["userID"], song, body, parent_comment)
+        return jsonify({"message" : "Successfully created comment"}), 200
     except Exception as e:
         # Catch any exception and return a 500 error with the exception message
         return jsonify({'error': f'Internal server error: {str(e)}'}), 500
-
 
 @app.route("/getposts", methods=["POST"])
 def get_posts():
     data = request.get_json()
     songID = data.get("last_segment")
     with engine.connect() as conn:
-        results = get_posts(songID)
-    
+        results = get_song_posts(conn, songID)
+        submit = [{"id" : item[0], "content" : item[1], "date" : item[2].strftime(string_format), "username" : select_user_id(conn,item[3]), "parent_comment" : item[5]} for item in results]
+        return submit
+
+@app.route('/usercommentactivity', methods=['GET'])
+def user_comment_activity():
+    try:
+        username = session["username"]
+        results_list = []
+        with engine.connect() as conn:
+            userID = select_user_username(conn,username)
+            tag_list = select_user_tags(conn, userID)
+            comment_list = select_user_comments(conn, userID)
+            for tag in tag_list:
+                results_list.append({"type" : "tag", "body" : tag[0], "song_data" : id_search(token, tag[1])})
+            for comment in comment_list:
+                results_list.append({"type" : "comment", "body" : comment[1], "date" : comment[2].strftime(string_format), "song_data" : id_search(token, comment[4])})
+        print(results_list)
+        return jsonify(results_list)
+    except Exception as e:
+        return e
+@app.route('/usertagactivity', methods=['GET'])
+def user_tag_activity():
+    try:
+        username = session["username"]
+        results_list = []
+        with engine.connect() as conn:
+            userID = select_user_username(conn, username)
+            tag_list = select_user_tags(conn, userID)
+            for i in tag_list:
+                results_list.append(i)
+        return results_list
+    except Exception as e:
+        return []
+            
+
+
 
 
 
@@ -85,10 +162,10 @@ def get_posts():
 def check_session():
     if 'email' in session:
         print(f"Session data: {session}")
-        return jsonify({"sessionSet": True})
+        return jsonify({"sessionSet": session["username"]})
     else:
         print(f"Session data: {session}")
-        return jsonify({"sessionSet": False}), 200
+        return jsonify({"sessionSet": ''}), 200
         
 # Log user out and close session
 @app.route('/logout', methods=['POST'])
@@ -122,7 +199,10 @@ def signup():
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
  
         with engine.connect() as conn:
-            insert_user(conn,username, hashed_password, email,)
+            result = insert_user(conn,username, hashed_password, email)
+            session["userID"] = result
+            session["username"] = username
+            session["email"] = email
         return jsonify({'message': 'User signed up successfully'}), 201
         
     except IntegrityError as e:
@@ -135,6 +215,8 @@ def signup():
 
 @app.route('/login', methods=['POST'])
 def login():
+
+
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
@@ -161,20 +243,24 @@ def login():
 def get_artist(id):
     if not id:
         return jsonify({'error': 'Artist ID is required'}), 400
-
+    with engine.connect() as conn:
+        insert_song(conn, id)
     return artist_search(token,id)
 
 @app.route('/album/<id>', methods=['GET'])
 def get_album(id):
     if not id:
         return jsonify({'error' : 'Album ID is required'}), 400
+    with engine.connect() as conn:
+        insert_song(conn, id)
 
     return album_search(token,id)
 @app.route('/track/<id>', methods=['GET'])
 def get_track(id):
     if not id:
         return jsonify({'error': 'Track ID is required'}), 400
-
+    with engine.connect() as conn:
+        insert_song(conn, id)
     return track_search(token,id)
 
 if __name__ == "__main__":

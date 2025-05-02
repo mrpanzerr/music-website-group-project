@@ -22,11 +22,11 @@
  Expected extensions/revisions: The code may be extended to handle more complex queries or additional table operations.
 """
 
-from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, CHAR, MetaData, Table, DateTime, insert, select
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, CHAR, MetaData, Table, DateTime, insert, select, func, update, and_
 from dotenv import load_dotenv
 from datetime import datetime
+from main import get_token, id_search
+
 import os
 
 load_dotenv()
@@ -41,33 +41,32 @@ engine = create_engine(f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_p
 
 meta = MetaData()
 
+Tags = Table(
+    "Tags",
+    meta,
+    Column('tag', String(100)),
+    Column('songID', String(200), ForeignKey('Songs.songID'), primary_key=True),
+    Column('userID', Integer, ForeignKey('Users.userID'), primary_key=True)
+)
 
 Songs = Table(
     "Songs",
     meta,
-    Column('songID', Integer, primary_key=True, autoincrement=True)
+    Column('songID', String(200), primary_key=True)
 )
+
 
 Users = Table(
     "Users",
     meta,
     Column('userID', Integer, primary_key=True, autoincrement=True),
     Column('username', String(20), unique=True, nullable=False),
-    Column('password', String(50), nullable=False),
+    Column('password', String(100), nullable=False),
+    Column('email', String(100), nullable=False),
     Column('date_joined', DateTime, default=datetime.utcnow),
     Column('bio', String(200), default="No Bio")
 )
 
-Posts = Table(
-    "Posts",
-    meta,
-    Column('postID', Integer, primary_key=True, autoincrement=True),
-    Column('date_posted', DateTime, default=datetime.utcnow),
-    Column('header', String(100), nullable=False),
-    Column('content', String(300), nullable=False),
-    Column('userID', Integer, ForeignKey('Users.userID'), nullable=False),
-    Column('songID', Integer, ForeignKey('Songs.songID'), nullable=False)
-)
 
 Comments = Table(
     "Comments",
@@ -75,8 +74,8 @@ Comments = Table(
     Column('commentID', Integer, primary_key=True, autoincrement=True),
     Column('content', String(200), nullable=False),
     Column('date_commented', DateTime, default=datetime.utcnow),
-    Column('postID', Integer, ForeignKey('Posts.postID'), ),
     Column('userID', Integer, ForeignKey('Users.userID'), nullable=False),
+    Column('songID', String(200), ForeignKey('Songs.songID'), nullable=True),
     Column('parent_commentID', Integer, ForeignKey('Comments.commentID'))
 )
 
@@ -92,11 +91,16 @@ Comments = Table(
     Expected output: A success message indicating the ID of the inserted song.
     Expected extensions/revisions: Extend to handle more song attributes (e.g., artist, album).
 """
-def insert_song(conn):
-    insert_statement = insert(Songs).values()
-    result = conn.execute(insert_statement)
-    conn.commit()
-    return f"Song with ID:{result.inserted_primary_key[0]} inserted"
+def insert_song(conn, song_id):
+    try:
+        insert_statement = insert(Songs).values(
+            songID = song_id
+        )
+        result = conn.execute(insert_statement)
+        conn.commit()
+        return f"Song with ID:{result.inserted_primary_key[0]} inserted"
+    except Exception:
+        return f"Song with ID: {song_id} already exists"
 
 """
     Method Comment Block: insert_user
@@ -111,38 +115,18 @@ def insert_song(conn):
     Expected output: A success message indicating the ID of the inserted user.
     Expected extensions/revisions: Extend to handle more user attributes (e.g., email, profile picture).
 """
-def insert_user(conn, username, password):
+def insert_user(conn, username, password, email):
+
     insert_statement = insert(Users).values(
         username=username,
-        password=password
+        password=password,
+        email = email
     )
     result = conn.execute(insert_statement)
     conn.commit()
-    return f"User with ID: {result.inserted_primary_key[0]} inserted"
+    return result.inserted_primary_key[0]
 
-"""
-    Method Comment Block: insert_post
-    Purpose: Inserts a new post into the Posts table.
-    Author: Ryan Ferrel
-    Written on: 4.8.25
-    Revised on: N/A
-    Called when: This method is called when a new post is being inserted into the database.
-    Where it fits: It is part of the database operations, handling the insertion of post data.
-    Data Structures/Algorithms: Uses SQLAlchemy's insert statement to insert a new post record.
-    Expected input: Connection object to the database, user ID, song ID, post header, and post content.
-    Expected output: A success message indicating the ID of the inserted post.
-    Expected extensions/revisions: Extend to handle more post attributes (e.g., tags, media).
-"""
-def insert_post(conn, user_id, song_id, header, content):
-    insert_statement = insert(Posts).values(
-        userID=user_id,
-        songID=song_id,
-        header=header,
-        content=content
-    )
-    result = conn.execute(insert_statement)
-    conn.commit()
-    return f"Post with ID: {result.inserted_primary_key[0]} inserted"
+
 
 """
     Method Comment Block: insert_comment
@@ -157,13 +141,94 @@ def insert_post(conn, user_id, song_id, header, content):
     Expected output: A success message indicating the ID of the inserted comment.
     Expected extensions/revisions: Extend to handle comment upvoting/downvoting or additional features.
 """
-def insert_comment(conn, user_id, post_id, content, parent_comment_id=None):
+def insert_comment(conn, user_id, song_id, content, parent_comment_id=None):
     insert_statement = insert(Comments).values(
         userID=user_id,
-        postID=post_id,
+        songID=song_id,
         content=content,
-        parent_comment_id=parent_comment_id
+        parent_commentID=parent_comment_id
     )
     result = conn.execute(insert_statement)
     conn.commit()
     return f"comment with ID: {result.inserted_primary_key[0]} inserted"
+
+def select_user(conn, email):
+    statement = select(Users).where(Users.c.email == email)
+    result = conn.execute(statement).fetchone()
+    return result
+
+def select_user_username(conn, user):
+    try:
+        id_search = conn.execute(select(Users.c.userID).where(Users.c.username == user)).fetchone()
+        return id_search[0]
+    except Exception as e:
+        return f'User does exist, error: {e}'
+                             
+def select_user_id(conn, id):
+    user_search = conn.execute(select(Users.c.username).where(Users.c.userID == id)).fetchone()
+    if user_search != None:
+        return user_search[0]
+    else:
+        "not found"
+
+def get_song_posts(conn, song):
+    comment_search = conn.execute(select(Comments).where(Comments.c.songID == song))
+    return comment_search
+
+
+    
+
+def check_user(conn, username, email):
+    user_search = conn.execute(select(Users).where(Users.c.username == username)).fetchone()
+    email_search = conn.execute(select(Users).where(Users.c.email == email)).fetchone()
+    if user_search and email_search:
+        return "Username and Email Already Exist"
+    if user_search:
+        return "Username Already Exists"
+    if email_search:
+        return "Email Already Exists"
+    else:
+        return "No Matches"
+    
+
+def insert_tag(conn, value, song, id):
+    if value != "":
+        try:
+            insert_statement = insert(Tags).values(
+                tag=value,
+                songID=song,
+                userID=id
+            )
+            conn.execute(insert_statement)
+            conn.commit()
+            return f"created tag"
+        except Exception:
+            conn.execute(update(Tags).where(and_(Tags.c.userID == id,Tags.c.songID == song)).values(tag=value))
+            conn.commit()
+            return f"updated tag"
+        
+
+def check_tag(conn, song, user):
+    test = conn.execute(select(Tags).where(and_(Tags.c.songID == song, Tags.c.userID == user))).fetchone()
+    if test != None:
+        return test[0]
+    else:
+        return "No Tag"
+    
+def select_tags_song(conn, song):
+    resultdict = {}
+    results = conn.execute(select(Tags.c.tag, func.count().label('occurrences')).where(Tags.c.songID == song).group_by(Tags.c.tag))
+    for i in results:
+        resultdict.setdefault(i[0],i[1])
+    return resultdict
+
+def select_user_tags(conn, user):
+    results = conn.execute(select(Tags).where(Tags.c.userID == user))
+    return results
+
+def select_user_comments(conn, user):
+    results = conn.execute(select(Comments).where(Comments.c.userID == user))
+    return results
+
+# with engine.connect() as conn:
+#     print(user_activity())

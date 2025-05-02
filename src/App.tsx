@@ -24,6 +24,7 @@ import ArtistPage from './components/Templates/ArtistPage';
 import TrackPage from './components/Templates/TrackPage';
 import AlbumPage from './components/Templates/AlbumPage';
 import Navbar from './components/navbar';
+import UserPage from './components/Templates/UserPage';
 import './App.css';
 
 
@@ -93,6 +94,7 @@ function Layout() {
 			<Route path="/artist/:id" element={<ArtistPage />} />
 			<Route path="/track/:id" element={<TrackPage />} />
 			<Route path="/album/:id" element={<AlbumPage />} />
+			<Route path="/user/:username" element={<UserPage />}/>
 			</Routes>
 		</section>
 	  </div>
