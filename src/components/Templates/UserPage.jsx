@@ -2,53 +2,48 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 export default function UserPage() {
-    const [data,setData] = useState([])
-    const { username } = useParams()
-    const [taglst,setTaglst] = useState([])
-    const [commentlst, setCommentlst] = useState([])
-    const tags = []
-    const comments = []
+    const [data,setData] = useState();
+    const { username } = useParams();
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await fetch(`http://127.0.0.1:5000/usertagactivity`);
-                const responseData = await res.json();
-                console.log(responseData);  // Log to inspect data
-                setData(responseData);
-    
-                const tags = [];
-                const comments = [];
-                
-                // responseData.forEach(item => {
-                //     if (item.type === 'tag') {
-                //         tags.push(item);
-                //     } else {
-                //         comments.push(item);
-                //     }
-                // });
-    
-                setTaglst(tags);
-                setCommentlst(comments);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-    
-        fetchData();
+		fetch(`http://127.0.0.1:5000/useractivity/${username}`)
+        .then(res => res.json())
+        .then(responseData => {
+            console.log(responseData);
+            setData(responseData);
+        })
+        .catch(error => console.error('Error fetching data:', error));
     }, [username]);
-
-
+    if (!data) {
+        return (<div>Loading...</div>)
+    }
     return (
-        <div>
-            <ul>
-                {commentlst.map((item,index) => (<ul key = {index}>
-                    <li>{item.body}</li>
-                    <li>{item.date}</li>
-                    <li>{item.song_data.name}</li>
-                    <li>{item.song_data.image}</li>
-                </ul>))}
-            </ul>
-        </div>
-        )
-}
+        <>
+            <div>
+                <ul className="TagsList">VIBES
+                    {data.tags.map((item,index) => (
+                        <li className="TagItem" key={index}>
+                            <a href={`/${item.type}/${item.songid}`}>
+                                <p>{item.vibe}</p>
+                                <p>{item.song_name}</p>
+                                <img src={item.song_url}></img>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+                <ul className="CommentsList">COMMENTS
+                    {data.comments.map((item,index) => (
+                        <li className="CommentItem" key={index}>
+                            <a href={`/${item.type}/${item.track_id}`}>
+                                <p>{item.content}</p>
+                                <p>{item.date}</p>
+                                <p>{item.song_name}</p>
+                                <img src={item.song_url}></img>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </>
+    )
+}  

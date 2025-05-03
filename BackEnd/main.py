@@ -28,9 +28,18 @@ import base64
 import json
 from requests import post, get
 import json
+from sqlalchemy import create_engine
+from db import insert_song
 
 load_dotenv() # Load environment variables from .env file
+db_password = os.getenv("DB_PASSWORD")
+db_user = 'root'
+db_host = '127.0.0.1'
+db_port = '3306'
+db_name = 'play_back_db'
 
+# Create a connection to the MySQL database using SQLAlchemy
+engine = create_engine(f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}", echo = True)
 #Put the super secret data in the .env file that is grabbed here
 client_id = os.getenv("CLIENT_ID")
 client_secret = os.getenv("CLIENT_SECRET")
@@ -114,6 +123,12 @@ def general_search(token, search, type, limit):
                          "artist" : [artist.get("name", '') for artist in item.get("artists", [{}])],
                          "id" : item.get("id", ""),
                          "album" : item.get("album", {}).get("images",[{"url" : "images/no_result.png"}])[-1].get("url","")} for item in json_result]
+        with engine.connect() as conn:
+            for i in results_list:
+                if i.get("type") == "track":
+                    insert_song(conn, i.get("id"), i.get("name"), i.get("type"), i.get("album"))
+                else:
+                    insert_song(conn, i.get("id"), i.get("name"), i.get("type"), i.get("image"))
         return results_list
 
     

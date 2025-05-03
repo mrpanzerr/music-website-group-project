@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 from main import general_search, get_token, get_auth_header, artist_search, track_search, album_search, id_search
 from sqlalchemy import create_engine
 from datetime import datetime
-from db import insert_comment, insert_song, insert_user, select_user, check_user, get_song_posts, select_user_id, select_tags_song, insert_tag, check_tag, select_user_tags, select_user_comments, select_user_username
+from db import insert_comment, insert_song, insert_user, select_user, check_user, get_song_posts, select_user_id, select_tags_song, insert_tag, check_tag, select_user_tags, select_user_comments, select_user_username, select_song_info
 from sqlalchemy.exc import OperationalError, IntegrityError, SQLAlchemyError
 from dotenv import load_dotenv
 import time
@@ -53,7 +53,8 @@ def search():
     token = get_token()
     data = request.get_json()
     search_value = data.get("search", "")
-    return general_search(token, search_value, data.get("type", "artist"), 5)
+    result = general_search(token, search_value, data.get("type", "artist"), 5)
+    return result
 
 
 @app.route('/broadsearch/<search>',methods = ["GET"])
@@ -131,11 +132,6 @@ def create_post():
         return jsonify({'error': f'Internal server error: {str(e)}'}), 500
 
 
-# # @app.route("/getposts", methods=["POST"])
-# # def get_posts():
-# #     data = request.get_json()
-# #     songID = data.get("last_segment")
-# =======
 @app.route("/getposts", methods=["POST"])
 def get_posts():
     data = request.get_json()
@@ -145,45 +141,32 @@ def get_posts():
         submit = [{"id" : item[0], "content" : item[1], "date" : item[2].strftime(string_format), "username" : select_user_id(conn,item[3]), "parent_comment" : item[5]} for item in results]
         return submit
 
-@app.route('/usercommentactivity', methods=['GET'])
-def user_comment_activity():
+@app.route('/useractivity/<user>', methods=['GET'])
+def user_comment_activity(user):
     try:
-        username = session["username"]
-        results_list = []
-        with engine.connect() as conn:
-            userID = select_user_username(conn,username)
-            tag_list = select_user_tags(conn, userID)
-            comment_list = select_user_comments(conn, userID)
-            for tag in tag_list:
-                results_list.append({"type" : "tag", "body" : tag[0], "song_data" : id_search(token, tag[1])})
-            for comment in comment_list:
-                results_list.append({"type" : "comment", "body" : comment[1], "date" : comment[2].strftime(string_format), "song_data" : id_search(token, comment[4])})
-        print(results_list)
-        return jsonify(results_list)
-    except Exception as e:
-        return e
-    
-
-@app.route('/usertagactivity', methods=['GET'])
-def user_tag_activity():
-    try:
-        username = session["username"]
-        results_list = []
+        username = user
         with engine.connect() as conn:
             userID = select_user_username(conn, username)
-            tag_list = select_user_tags(conn, userID)
-            for i in tag_list:
-                results_list.append(i)
-        return results_list
+            comments_list = select_user_comments(conn, userID)
+            tags_list = select_user_tags(conn, userID)
+            results_dict = {"tags": [{
+                                    "vibe" : tag[0],
+                                    "songid" : tag[1],
+                                    "song_name" : select_song_info(conn, tag[1])[1],
+                                    "song_url" : select_song_info(conn, tag[1])[2],
+                                    "type" : select_song_info(conn, tag[1])[3]}for tag in tags_list],
+                            "comments": [{
+                                    "content" : comment[1], 
+                                    "date" : comment[2].strftime(string_format),
+                                    "songid" : comment[4],
+                                    "song_name" : select_song_info(conn, comment[4])[1],
+                                    "song_url" : select_song_info(conn, comment[4])[2],
+                                    "type" : select_song_info(conn,comment[4])[2]} for comment in comments_list]}
+            return results_dict
     except Exception as e:
-        return []
-            
+        return jsonify({"error": f"Error fetching user comment activity: {e}"}), 500
 
-
-
-
-
-
+    
 
 
 # check to see if session is set
@@ -276,26 +259,18 @@ def get_artist(id):
     token = get_token()
     if not id:
         return jsonify({'error': 'Artist ID is required'}), 400
-    with engine.connect() as conn:
-        insert_song(conn, id)
     return artist_search(token,id)
-
 @app.route('/album/<id>', methods=['GET'])
 def get_album(id):
     token = get_token()
     if not id:
         return jsonify({'error' : 'Album ID is required'}), 400
-    with engine.connect() as conn:
-        insert_song(conn, id)
-
     return album_search(token,id)
 @app.route('/track/<id>', methods=['GET'])
 def get_track(id):
     token = get_token()
     if not id:
         return jsonify({'error': 'Track ID is required'}), 400
-    with engine.connect() as conn:
-        insert_song(conn, id)
     return track_search(token,id)
 
 if __name__ == "__main__":

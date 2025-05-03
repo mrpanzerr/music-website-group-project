@@ -52,7 +52,10 @@ Tags = Table(
 Songs = Table(
     "Songs",
     meta,
-    Column('songID', String(200), primary_key=True)
+    Column('songID', String(200), primary_key=True),
+    Column('name', String(100), default="NoName"),
+    Column('image', String(200)),
+    Column('type', String(50))
 )
 
 
@@ -91,10 +94,13 @@ Comments = Table(
     Expected output: A success message indicating the ID of the inserted song.
     Expected extensions/revisions: Extend to handle more song attributes (e.g., artist, album).
 """
-def insert_song(conn, song_id):
+def insert_song(conn, song_id, name, type, image="images/no_result.png"):
     try:
         insert_statement = insert(Songs).values(
-            songID = song_id
+            songID = song_id,
+            name = name,
+            image = image,
+            type = type
         )
         result = conn.execute(insert_statement)
         conn.commit()
@@ -230,6 +236,9 @@ def select_tags_song(conn, song):
 #     test = select_tags_song(conn, '73cZMVThj3x9ntYUT29hwD')
 #     for i in test:
 #         print(i)
+def select_song_info(conn, song):
+    results = conn.execute(select(Songs).where(Songs.c.songID == song)).fetchone()
+    return results
 
 def select_user_tags(conn, user):
     results = conn.execute(select(Tags).where(Tags.c.userID == user))
@@ -239,5 +248,9 @@ def select_user_comments(conn, user):
     results = conn.execute(select(Comments).where(Comments.c.userID == user))
     return results
 
-# with engine.connect() as conn:
-#     print(user_activity())
+with engine.connect() as conn:
+    print([i for i in (select_user_comments(conn, 1))])
+
+
+with engine.connect() as conn:
+    print(select_song_info(conn,"7gfkYbxpguEc9bm6m8TpAr"))
