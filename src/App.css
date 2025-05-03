@@ -17,6 +17,7 @@
     background-color: #363333;
     margin: 0 auto;
     width: 70%;
+    overflow: hidden;
 }
 
 /* Center content in the middle of the page */
@@ -199,4 +200,37 @@
     height: 20vh;
     width: 98%;
     margin: 15px auto;
+}
+
+/* Styling for different screen sizes */
+@media (max-width: 1110px) {
+    .casette-base {
+        visibility: hidden;
+    }
+
+    .casette-content {
+        visibility: visible;
+        border-radius: 25px 25px 25px 25px;
+        box-shadow: 0 0 10px #232323;
+    }
+
+    .casette-colorline.bottom {
+        border-radius: 0 0 25px 25px;
+    }
+
+    .center {
+        height: 60vh;
+    }
+}
+
+@media (max-width: 990px) {
+    .arrow-container {
+        display: none;
+    }
+
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+        flex-wrap: wrap;
+    }
 }
