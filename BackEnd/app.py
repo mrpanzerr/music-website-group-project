@@ -55,15 +55,13 @@ def search():
     search_value = data.get("search", "")
     return general_search(token, search_value, data.get("type", "artist"), 5)
 
-
-@app.route('/broadsearch',methods = ["POST"])
-def broad_search():
+@app.route('/broadsearch/<search>',methods = ["GET"])
+def broad_search(search):
     token = get_token()
-    data = request.get_json()
-    search_value = data.get("search", "")
-    return {"artists" : general_search(token, search_value, "artist",10),
+    search_value = search
+    return jsonify({"artists" : general_search(token, search_value, "artist",10),
             "albums" : general_search(token, search_value, "album",10),
-            "tracks" : general_search(token, search_value, "track",10),}
+            "tracks" : general_search(token, search_value, "track",10),})
 
 
 @app.route('/usertag',methods=["POST"])

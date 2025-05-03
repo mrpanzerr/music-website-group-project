@@ -83,7 +83,7 @@ function Layout() {
 				}
 		<section>
 			<Routes>
-			<Route path="/" element={null} />
+			<Route path="/" element={<div></div>} />
 			<Route path="/create_acct" element={<CreateAcctPage />} />
 			<Route path="/acct_created_page" element={<AcctCreatedPage />} />
 			<Route path="/login_page" element={<LoginPage />} />
@@ -93,6 +93,7 @@ function Layout() {
 			<Route path="/track/:id" element={<TrackPage />} />
 			<Route path="/album/:id" element={<AlbumPage />} />
 			<Route path="/user/:username" element={<UserPage />}/>
+			<Route path="/broadsearch/:search" element={<BroadSearch />}/>
 			</Routes>
 		</section>
 	  </div>
