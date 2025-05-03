@@ -115,6 +115,7 @@ def general_search(token, search, type, limit):
                          "id" : item.get("id", ""),
                          "album" : item.get("album", {}).get("images",[{"url" : "images/no_result.png"}])[-1].get("url","")} for item in json_result]
         return results_list
+
     
 
 def artist_search(token, id):
@@ -231,8 +232,14 @@ def id_search(token, id):
         return {"name" : "noName", "image" : "images/no_result.png"}
     
 
+def broad_search(token,search_value):
+    return json.dumps({"artists" : general_search(token, search_value, "artist",10),
+            "albums" : general_search(token, search_value, "album",10),
+            "tracks" : general_search(token, search_value, "track",10),})
+    
+
 token = get_token()
-print(id_search(token, '2n2RSaZqBuUUukhbLlpnE6'))
+print(broad_search(token, "asd"))
     
 
 

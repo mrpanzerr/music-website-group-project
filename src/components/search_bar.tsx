@@ -195,7 +195,8 @@ export default function GetData() {
                 <button id="artist" onClick={handleClick}>Artist</button>
                 <button id="track" onClick={handleClick}>Track</button>
                 <button id="album" onClick={handleClick}>Album</button>
-                <button id="broad" onClick={() => handleResultClick(search,'broad')}></button>
+                <button id="broad" onClick={() => handleResultClick(search, 'broad')}>Search</button>
+
             </div>
             <ul className="list-group">
                 {data && data.map((item, index) => (

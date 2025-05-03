@@ -83,7 +83,7 @@ function Layout() {
 				}
 		<section>
 			<Routes>
-			<Route path="/" element={null} />
+			<Route path="/" element={<div></div>} />
 			<Route path="/create_acct" element={<CreateAcctPage />} />
 			<Route path="/acct_created_page" element={<AcctCreatedPage />} />
 			<Route path="/login_page" element={<LoginPage />} />
