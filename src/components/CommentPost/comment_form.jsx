@@ -133,7 +133,7 @@ export default function CreatePost() {
 
 	/*
 	 * Purpose: Handles changes to the comment input field by updating the `content` state.
-	 * Author: Gaetano
+	 * Author: Ryan
 	 * Date: 2025-05-03
 	 * Revised: 2025-05-03
 	 * Called by: Triggered when the user types in the comment input field.
@@ -147,7 +147,7 @@ export default function CreatePost() {
 	
 	/*
 	 * Purpose: Submits the comment or reply form to the backend, creating a new post or reply.
-	 * Author: Gaetano
+	 * Author: Ryan
 	 * Date: 2025-05-03
 	 * Revised: 2025-05-03
 	 * Called by: Triggered when the user clicks the "Submit" button after entering content.
@@ -175,7 +175,7 @@ export default function CreatePost() {
 
 	/*
 	 * Purpose: Recursively renders comments and replies to display the entire comment thread.
-	 * Author: Gaetano
+	 * Author: Ryan, Gaetano, Max
 	 * Date: 2025-05-03
 	 * Revised: 2025-05-03
 	 * Called by: Called to render the comment threads for each post.
