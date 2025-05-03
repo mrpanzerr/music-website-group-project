@@ -114,7 +114,7 @@ def general_search(token, search, type, limit):
                          "artist" : [artist.get("name", '') for artist in item.get("artists", [{}])],
                          "id" : item.get("id", ""),
                          "album" : item.get("album", {}).get("images",[{"url" : "images/no_result.png"}])[-1].get("url","")} for item in json_result]
-        return json.dumps(results_list)
+        return results_list
     
 
 def artist_search(token, id):

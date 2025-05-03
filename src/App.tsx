@@ -93,6 +93,7 @@ function Layout() {
 			<Route path="/track/:id" element={<TrackPage />} />
 			<Route path="/album/:id" element={<AlbumPage />} />
 			<Route path="/user/:username" element={<UserPage />}/>
+			<Route path="/broadsearch/:search" element={<BroadSearch />}/>
 			</Routes>
 		</section>
 	  </div>
