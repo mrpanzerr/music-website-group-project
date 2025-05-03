@@ -25,7 +25,7 @@
 from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, CHAR, MetaData, Table, DateTime, insert, select, func, update, and_
 from dotenv import load_dotenv
 from datetime import datetime
-from main import get_token, id_search
+
 
 import os
 
@@ -128,6 +128,7 @@ def insert_user(conn, username, password, email):
 
 
 
+
 """
     Method Comment Block: insert_comment
     Purpose: Inserts a new comment into the Comments table.
@@ -156,6 +157,7 @@ def select_user(conn, email):
     statement = select(Users).where(Users.c.email == email)
     result = conn.execute(statement).fetchone()
     return result
+
 
 def select_user_username(conn, user):
     try:
@@ -206,7 +208,6 @@ def insert_tag(conn, value, song, id):
             conn.execute(update(Tags).where(and_(Tags.c.userID == id,Tags.c.songID == song)).values(tag=value))
             conn.commit()
             return f"updated tag"
-        
 
 def check_tag(conn, song, user):
     test = conn.execute(select(Tags).where(and_(Tags.c.songID == song, Tags.c.userID == user))).fetchone()
@@ -221,6 +222,14 @@ def select_tags_song(conn, song):
     for i in results:
         resultdict.setdefault(i[0],i[1])
     return resultdict
+
+# with engine.connect() as conn:
+#     print(check_tag(conn, "2nTjd2lNo1GVEfXM3bCnsh", 50))
+#     # for i in range(10,14):
+#     #     create_tag(conn, 'hate', '73cZMVThj3x9ntYUT29hwD', i)
+#     test = select_tags_song(conn, '73cZMVThj3x9ntYUT29hwD')
+#     for i in test:
+#         print(i)
 
 def select_user_tags(conn, user):
     results = conn.execute(select(Tags).where(Tags.c.userID == user))

@@ -38,6 +38,15 @@ app.config['SESSION_COOKIE_SECURE'] = True
 app.config['PERMANENT_SESSION_LIFETIME']
 
 
+load_dotenv()
+db_password = os.getenv("DB_PASSWORD")
+db_user = 'root'
+db_host = '127.0.0.1'
+db_port = '3306'
+db_name = 'play_back_db'
+
+engine = create_engine(f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}", echo = True)
+
 #If data is fetched from server URL + /search, this data is returned in json format.
 @app.route('/search', methods = ['POST'])
 def search():
@@ -46,14 +55,15 @@ def search():
     search_value = data.get("search", "")
     return general_search(token, search_value, data.get("type", "artist"), 5)
 
-@app.route('/broadsearch',methods = ["POST"])
-def broad_search():
+
+@app.route('/broadsearch/<search>',methods = ["GET"])
+def broad_search(search):
     token = get_token()
-    data = request.get_json()
-    search_value = data.get("search", "")
-    return {"artists" : general_search(token, search_value, "artist",10),
+    search_value = search
+    return jsonify({"artists" : general_search(token, search_value, "artist",10),
+
             "albums" : general_search(token, search_value, "album",10),
-            "tracks" : general_search(token, search_value, "track",10),}
+            "tracks" : general_search(token, search_value, "track",10),})
 
 
 @app.route('/usertag',methods=["POST"])
@@ -112,12 +122,20 @@ def create_post():
         if not body:
             return jsonify({'error': 'Please Enter Text'}), 400
         with engine.connect() as conn:
+            insert_comment(conn, 1, song, body)
+            return jsonify({"message" : "Comment Successfully Created"}), 200
             insert_comment(conn, session["userID"], song, body, parent_comment)
         return jsonify({"message" : "Successfully created comment"}), 200
     except Exception as e:
         # Catch any exception and return a 500 error with the exception message
         return jsonify({'error': f'Internal server error: {str(e)}'}), 500
 
+
+# # @app.route("/getposts", methods=["POST"])
+# # def get_posts():
+# #     data = request.get_json()
+# #     songID = data.get("last_segment")
+# =======
 @app.route("/getposts", methods=["POST"])
 def get_posts():
     data = request.get_json()
@@ -171,6 +189,8 @@ def user_tag_activity():
 # check to see if session is set
 @app.route('/check-session', methods=['GET'])
 def check_session():
+    print("=================")
+    print(session)
     if 'email' in session:
         print(f"Session data: {session}")
         return jsonify({"sessionSet": session["username"]})
@@ -231,6 +251,7 @@ def login():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
+
 
     if not email or not password:
         return jsonify({'error': 'Email and password are required'}), 400
