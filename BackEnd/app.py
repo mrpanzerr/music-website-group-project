@@ -209,6 +209,16 @@ def signup():
         if '@' not in email:
             return jsonify({'error': 'Invalid email format'}), 400
 
+        with engine.connect() as conn:
+            # Check if email already exists
+            email_check = conn.execute(
+                text("SELECT email FROM users WHERE email = :email"),
+                {"email": email}
+            ).fetchone()
+
+            if email_check:
+                return jsonify({'error': 'Email already exists'}), 409
+
         # Hash the password using bcrypt
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
  
