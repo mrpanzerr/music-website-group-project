@@ -230,8 +230,8 @@
 }
 
 @media (max-width: 990px) {
-    .arrow-container {
-        display: none;
+    .page-header img {
+        visibility: hidden;
     }
 
     .navbar {
