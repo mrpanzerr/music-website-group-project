@@ -7,6 +7,7 @@ from datetime import datetime
 from db import insert_comment, insert_song, insert_user, select_user, check_user, get_song_posts, select_user_id, select_tags_song, insert_tag, check_tag, select_user_tags, select_user_comments, select_user_username
 from sqlalchemy.exc import OperationalError, IntegrityError, SQLAlchemyError
 from dotenv import load_dotenv
+import time
 import os
 import json
 import requests
@@ -22,9 +23,6 @@ db_name = 'play_back_db'
 # Create a connection to the MySQL database using SQLAlchemy
 engine = create_engine(f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}", echo = True)
 
-
-
-token = get_token()
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 CORS(app, supports_credentials=True)
@@ -43,9 +41,20 @@ app.config['PERMANENT_SESSION_LIFETIME']
 #If data is fetched from server URL + /search, this data is returned in json format.
 @app.route('/search', methods = ['POST'])
 def search():
+    token = get_token()
     data = request.get_json()
     search_value = data.get("search", "")
     return general_search(token, search_value, data.get("type", "artist"), 5)
+
+@app.route('/broadsearch',methods = ["POST"])
+def broad_search():
+    token = get_token()
+    data = request.get_json()
+    search_value = data.get("search", "")
+    return {"artists" : general_search(token, search_value, "artist",10),
+            "albums" : general_search(token, search_value, "album",10),
+            "tracks" : general_search(token, search_value, "track",10),}
+
 
 @app.route('/usertag',methods=["POST"])
 def user_tag():
@@ -135,6 +144,8 @@ def user_comment_activity():
         return jsonify(results_list)
     except Exception as e:
         return e
+    
+
 @app.route('/usertagactivity', methods=['GET'])
 def user_tag_activity():
     try:
@@ -241,6 +252,7 @@ def login():
 
 @app.route('/artist/<id>', methods=['GET'])
 def get_artist(id):
+    token = get_token()
     if not id:
         return jsonify({'error': 'Artist ID is required'}), 400
     with engine.connect() as conn:
@@ -249,6 +261,7 @@ def get_artist(id):
 
 @app.route('/album/<id>', methods=['GET'])
 def get_album(id):
+    token = get_token()
     if not id:
         return jsonify({'error' : 'Album ID is required'}), 400
     with engine.connect() as conn:
@@ -257,6 +270,7 @@ def get_album(id):
     return album_search(token,id)
 @app.route('/track/<id>', methods=['GET'])
 def get_track(id):
+    token = get_token()
     if not id:
         return jsonify({'error': 'Track ID is required'}), 400
     with engine.connect() as conn:

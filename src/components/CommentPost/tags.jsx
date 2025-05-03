@@ -13,7 +13,11 @@ export default function TagSection() {
     const handleClick = (e) => {
         checkSession().then(session => {
             if (session != '') {
-                setCurrent(e.target.id)
+                const className = e.target.parentElement.className;
+                setCurrent(className)
+                console.log(e.target.className)
+                document.querySelectorAll('#current').forEach(element => element.removeAttribute('id'));
+            document.querySelector(`.${className}`).id = 'current';
             }else {
                 alert("You must be signed in to add a vibe")
             }
@@ -62,6 +66,11 @@ export default function TagSection() {
         .then(responseData => {
             setData(responseData);
             setUserTag(responseData.exists);
+            console.log(usertag)
+            const element = document.querySelector(`.${responseData.exists}`).id = 'current';
+            if (element) {
+                element.id="current"
+            }
         })
         .catch(error => {
             console.error("Error fetching initial tags:", error);
@@ -76,14 +85,15 @@ export default function TagSection() {
 
 
     return (
-        <div>
-            <p>{data.exists}</p>
-            <ul>Click to add a vibe
-                    <li id="hate" onClick={handleClick}>Hate : {data.hate || 0}</li>
-                    <li id="angry" onClick={handleClick}>Angry : {data.angry || 0}</li>
-                    <li id="love" onClick={handleClick}>Love : {data.love || 0}</li>
-                    <li id="okay" onClick={handleClick}>Okay : {data.okay || 0}</li>
-                    <li id="amazing" onClick={handleClick}>Amazing : {data.amazing || 0}</li>
+        <div className="TagSection">
+            <p>Select a Vibe</p>
+            <ul className="TagList">
+                    <li className="hate" onClick={handleClick}><img className="hatepic" src="https://openmoji.org/data/color/svg/1F922.svg"></img>{data.hate || 0}</li>
+                    <li className="angry" onClick={handleClick}><img className="angrypic" src="https://openmoji.org/data/color/svg/1F928.svg"></img>{data.angry || 0}</li>
+                    <li className="okay" onClick={handleClick}><img className="okaypic" src="https://openmoji.org/data/color/svg/1F642.svg"></img>{data.okay || 0}</li>
+                    <li className="amazing" onClick={handleClick}><img className="amazingpic" src="https://openmoji.org/data/color/svg/1F600.svg"></img>{data.amazing || 0}</li>
+                    <li className="love" onClick={handleClick}><img className="lovepic" src="https://openmoji.org/data/color/svg/1F60D.svg"></img>{data.love || 0}</li>
+
             </ul>
         </div>
     )

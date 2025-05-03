@@ -188,6 +188,12 @@
     width: 98%;
     margin: 0 auto;
 }
+.sideB {
+    margin-bottom: -3rem;
+}
+.sideA {
+    margin-bottom: -3rem;
+}
 
 /* Page Footer styling */
 .page-footer {

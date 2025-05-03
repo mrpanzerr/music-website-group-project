@@ -15,6 +15,7 @@
 
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import GetData from "./components/search_bar.tsx";
+import BroadSearch from "./components/Templates/BroadSearch";
 import CreateAcctPage from "../FrontEnd/create_acct_page.tsx";
 import AcctCreatedPage from "../FrontEnd/acct_created_page.tsx";
 import LoginPage from "../FrontEnd/login_page.tsx";
@@ -55,10 +56,7 @@ function Layout() {
 					<header>
 						<div className="page-header">
 							<h1 className="sideB">Side A</h1>
-							<div className="arrow-container">
-								<div className="arrow-body"></div>
-								<div className="arrow-head"></div>
-							</div>
+							<img src="../public/images/playbackarrow.png"></img>
 						</div>
 						<div className="center">
 							<div className="casette-base">

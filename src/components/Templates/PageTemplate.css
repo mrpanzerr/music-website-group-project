@@ -1,6 +1,6 @@
 /* 
-* Author: Max Collins
-* Date: 4/26/2025
+* Author: Max Collins, Ryan Farrell
+* Date: 4/26/2025, 5/1/2025
 * Description: CSS file for PageTemplate.tsx
 * Handles styling for the artist, album, and track pages
 */
@@ -18,26 +18,111 @@ img {
 
 /* Page Header styling */
 .page-header {
+    font-size: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     background: linear-gradient(to bottom, #FBB03B, #F7931E, #F15A24);
     height: 20vh;
-    width: 98%;
+    width: 2%;
     margin: 0 auto;
 }
-
-/* Page Footer styling */
-.page-footer {
+.page-header img {
+    height: 7rem;
+    width: 50%;
+    box-shadow: none;
+}
+.sideB {
+    font-size: 50rem;
+}
+/* Tags Area styling */
+.TagSection {
+    margin-top: 1rem;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 2rem;
+}
+.TagList {
+    list-style-type: none;
     display: flex;
-    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+    padding: 0;
+}
+.TagList li {
+    display:flex;
+    flex-direction: column;
+    width: 20%;
+    text-align: center;
+    font-size: 2rem;
+}
+.TagList #current {
+    color: orange;
+}
+.TagList li img {
+    box-shadow: none;
+    margin-bottom: -2rem;
+    margin-top: -2rem;
+}
+/* Page Footer styling */
+.template-footer {
+    display: flex;
+    justify-content: left;
     align-items: center;
     flex-direction: column;
     background: linear-gradient(to top, #FBB03B, #F7931E, #F15A24);
-    height: 20vh;
     width: 98%;
     margin: 15px auto;
+}
+.CommentContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.InputArea {
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    padding-top: 1rem;
+    border-top: 2px solid orange;
+}
+.InputArea textarea {
+    width: 50%;
+    justify-self: center;
+    align-self: center;
+}
+.InputArea button {
+    align-self: center;
+}
+.CreateComment {
+    justify-self: center;
+    font-size: 1em;
+    width: 100%;
+}
+.ReplyButton {
+    margin: none;
+    margin-left: .5rem;
+}
+.HeaderField {
+    display: block;
+    margin-top: 2rem;
+    color: orange;
+    margin-left: .5rem;
+}
+.ContentField {
+    background-color: rgb(192, 192, 192);
+    width: 90%;
+    display: block;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    margin-left: 1rem;
+}
+.ContentArea {
+    margin-bottom: 1rem;
 }
 
 /* Page Header logo */
@@ -48,7 +133,7 @@ img {
 }
 .arrow-body {
     width: 500px;
-    height: 15px;
+    height: 20px;
     background-color: #FFFFFF;
     margin: -5px;
 }
@@ -65,37 +150,49 @@ img {
 
 .sideB {
     font-family: 'Baumans', sans-serif;
-    font-size: 60px;
+    font-size: 4rem;
     color: #FFFFFF;
     text-shadow: 0 0 10px #808080;
     font-style: italic;
-    margin-bottom: -5px;
 }
 
 /* Title styling */
 .titleHeader {
     font-family: "Baumans", sans-serif;
-    font-size: 60px;
+    font-size: 4rem;
     color: #FFFFFF;
     font-style: italic;
-    margin-top: 20px;
-    margin-bottom: -20px;
-    padding: 0 20px;
+    margin-top: 2px;
+    margin-bottom: -2px;
+    padding: 0;
     text-align: center;
 
 }
 
 /* Track page styling */
-.flex {
+.trackDetails {
     display: flex;
-    flex-direction: row;
-    margin-top: 40px;
-    margin-left: 14px;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    font-size: 30rem;
+}
+.titleHeader {
+    font-size: 40vw;
+}
+.flex img{
+    width: 90%;
+    display: flex;
+    margin-top: 2rem;
+    margin: auto;
+}
+.trackImage {
+    justify-self: center;
 }
 
 .trackInfo {
     list-style: none;
-    font-size: 35px;
+    font-size: 2vh;
     color: #FFFFFF;
 }
 
@@ -106,7 +203,7 @@ img {
 /* Album page styling */
 .albumInfo {
     list-style: none;
-    font-size: 35px;
+    font-size: 4vh;
     color: #FFFFFF;
 }
 
@@ -131,7 +228,7 @@ img {
 
 .tracksHeader {
     font-family: "Baumans", sans-serif;
-    font-size: 60px;
+    font-size: 7vh;
     font-style: italic;
     color: #FFFFFF;
 }
@@ -145,7 +242,11 @@ img {
     list-style: square;
     color: #FFFFFF;
 }
-
+.albumTracks li {
+    font-size: 4vh;
+    margin-left: 10%;
+    width: 70%;
+}
 .albumTracks a {
     color: #FFFFFF;
 }
@@ -154,19 +255,44 @@ img {
 .flex-artist {
     display: flex;
     flex-direction: column;
-    margin-top: 40px;
+    margin-top: 2rem;
     justify-content: center;
     align-items: center;
+    width: 70%;
 }
 .artistInfo {
     list-style: none;
-    font-size: 35px;
+    font-size: 2rem;
     color: #FFFFFF;
-    margin-top: 10px;
-    margin-bottom: -10px;
+    margin-top: 1px;
+    margin-bottom: -1rem;
 }
 
+.artistDetails {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.titleHeader {
+    justify-self: center;
+    font-size: 5vh;
+}
 /* Top tracks section styling */
+.flex-artist {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.artistImage {
+    display: flex;
+    justify-content: center;
+}
+.artistImage img {
+    justify-self: center;
+    width: 75%;
+}
 .artistTopTracks {
     display: flex;
     flex-direction: column;
@@ -178,8 +304,8 @@ img {
 .artistTopTracks ul {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px 80px;
-    padding: 0;
+    gap: 1rem 1rem;
+    padding: 1rem;
 }
 
 .artistTopTracks li {
@@ -188,14 +314,19 @@ img {
     justify-content: center;
     align-items: center;
     font-size: 30px;
-    margin-top: 20px;
+    margin-top: 0;
+    margin-left: 0;
 }
 
 .artistTopTracks a {
+    display: flex;
+    justify-content: center;
     color: #FFFFFF;
+    align-items: center;
 }
 
 .artistTopTracks img {
-    width: 500px;
-    height: 500px;
+    justify-self: center;
+    align-self: center;
+    width: 90%;
 }

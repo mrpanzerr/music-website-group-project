@@ -85,10 +85,10 @@ export default function CreatePost() {
     const commentStructure = (comments, parentComment = null, level = 0) => {
         const spacing = 40
         return comments.filter(comment => comment.parent_comment === parentComment).map(comment => (
-            <div key={comment.id} style = {{marginLeft: `${spacing * level}px`}}>
-                <span><i>{comment.username}</i>  {comment.date}</span><br></br>
-                <span>{comment.content}</span><br></br>
-                <button id = {comment.id} onClick={changeTarget}><u>Reply</u></button>
+            <div className="CommentDiv" key={comment.id} style = {{marginLeft: `${spacing * level}px`}}>
+                <span className="HeaderField"><i>{comment.username}</i> | {comment.date}</span><br></br>
+                <span className="ContentField">{comment.content}</span><br></br>
+                <button className="ReplyButton" id = {comment.id} onClick={changeTarget}><u>Reply</u></button>
                 {checkSession() === comment.username ? <button>Delete</button> : null}
                 {commentStructure(comments, comment.id, level + 1)}
             </div>
@@ -96,19 +96,19 @@ export default function CreatePost() {
         ));
     };
     return (
-        <div>
+        <div classnName = "CommentContainer">
             {status === "unclicked" &&(
-                <div id = "inputArea">
-                    <button onClick={openCommentForm}>Create Comment</button>
+                <div id = "inputArea" className="InputArea">
+                    <button className="CreateComment"onClick={openCommentForm}>Create Comment</button>
                 </div>
             )}
             {status === "clicked" && (
-                <div>
-                    <input ref = {inputRef} type="text" id="content" placeholder="Enter Comment" value={content} onChange={handleChange}></input>
-                    <button id="submit" onClick={submitCommentForm}>Submit</button>
+                <div className="InputArea">
+                    <textarea ref = {inputRef} className="" id="content" placeholder="Enter Comment" value={content} onChange={handleChange}></textarea>
+                    <button id="submit" className="SubmitComment" onClick={submitCommentForm}>Submit</button>
                 </div>
             )}
-            <div>
+            <div className="ContentArea">
                 {commentStructure(data)}
             </div>
         </div>);
