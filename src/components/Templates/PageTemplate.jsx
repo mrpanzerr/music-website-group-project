@@ -69,13 +69,9 @@ const PageTemplate = ({ data }) => {
 			{/* Header Section */}
 			<div className="page-header">
 				<h1 className="sideB">Side B</h1>
-				<div className="arrow-container">
-					<div className="arrow-body"></div>
-					<div className="arrow-head"></div>
-				</div>
-				<TagSection />
+				<img src="../../../public/images/playbackarrow.png"></img>
 			</div>
-
+			<TagSection />
             {type === "artist" && (
 			  <section className="artistDetails">
 				{/* Artist Header */}
@@ -207,7 +203,7 @@ const PageTemplate = ({ data }) => {
 					{/* <Thoughts /> -- This will be the posting/comment component */}
 				</section>
 			)};
-			<div className="page-footer">
+			<div className="tempalte-footer">
 				<CreatePost/>
 			</div>
         </div>

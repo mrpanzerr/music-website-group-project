@@ -176,6 +176,8 @@ export default function GetData() {
             navigate(`/track/${id}`);
         } else if (type === "album") {
             navigate(`/album/${id}`);
+        } else if (type === 'broad') {
+            navigate(`/broadsearch/${search}`)
         }
 	};
 
@@ -193,7 +195,7 @@ export default function GetData() {
                 <button id="artist" onClick={handleClick}>Artist</button>
                 <button id="track" onClick={handleClick}>Track</button>
                 <button id="album" onClick={handleClick}>Album</button>
-                <button id="submit" onClick={handleSearch}>Search</button>
+                <button id="broad">Search</button>
             </div>
             <ul className="list-group">
                 {data && data.map((item, index) => (

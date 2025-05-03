@@ -38,7 +38,8 @@ Future Extensions or Revisions:
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import PageTemplate from './PageTemplate'; // Import the template
+import PageTemplate from './PageTemplate';
+import './PageTemplate.css'; // Import the template
 
 const ArtistPage = () => {
     const { id } = useParams();  // Get the artist ID from the URL
