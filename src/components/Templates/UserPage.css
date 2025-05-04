@@ -1,0 +1,88 @@
+/* 
+* Author: Max Collins
+* Date: 5/4/2025
+* Description: CSS file for UserPage.tsx
+*/
+
+/* General page styling */
+.UserPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #FFFFFF;
+    height: 100%;
+}
+
+/* Header text styling */
+.UserPage h1 {
+    font-family: "Baumans", sans-serif;
+    font-size: 3rem;
+    font-style: italic;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #1f1d1d;
+    border-color: #FBB03B;
+    border-style: ridge;
+    border-radius: 8px;
+    width: fit-content;
+    padding: 1rem;
+}
+
+/* Comments and Tags section styling */
+.CommentsList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 95%;
+    padding: 1rem;
+    background-color: #1f1d1d;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #232323;
+    list-style: none;
+}
+
+.CommentItem {
+    border-color: #FBB03B;
+    border-style: ridge;
+    border-width: 3px;
+    padding: 1rem;
+    margin: 1rem 0;
+    width: 75%;
+    background-color: #2a2828;
+}
+
+.CommentItem a, .TagItem a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.CommentItem a:hover, .TagItem a:hover {
+    text-decoration: underline;
+}
+
+/* Tags section styling */
+.TagsList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    align-items: center;
+    justify-content: center;
+    width: 95%;
+    padding: 1rem;
+    gap: 1rem;
+    background-color: #1f1d1d;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #232323;
+    list-style: none;
+}
+
+.TagItem {
+    border-color: #FBB03B;
+    border-style: ridge;
+    border-width: 3px;
+    padding: 1rem;
+    margin: 1rem 0;
+    height: 12rem;
+    background-color: #2a2828;
+}

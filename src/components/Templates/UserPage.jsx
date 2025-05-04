@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import './UserPage.css';
 
 export default function UserPage() {
     const [data,setData] = useState();
@@ -20,29 +22,37 @@ export default function UserPage() {
     return (
         <>
             <div>
-                <ul className="TagsList">VIBES
-                    {data.tags.map((item,index) => (
-                        <li className="TagItem" key={index}>
-                            <a href={`/${item.type}/${item.songid}`}>
-                                <p>{item.vibe}</p>
-                                <p>{item.song_name}</p>
-                                <img src={item.song_url}></img>
-                            </a>
-                        </li>
-                    ))}
-                </ul>
-                <ul className="CommentsList">COMMENTS
-                    {data.comments.map((item,index) => (
-                        <li className="CommentItem" key={index}>
-                            <a href={`/${item.type}/${item.track_id}`}>
-                                <p>{item.content}</p>
-                                <p>{item.date}</p>
-                                <p>{item.song_name}</p>
-                                <img src={item.song_url}></img>
-                            </a>
-                        </li>
-                    ))}
-                </ul>
+                <div className="page-header">
+					<h1 className="sideB">-User-</h1>
+					<img src="../public/images/playbackarrow.png"></img>
+				</div>
+                <div className="UserPage">
+                    <h1>-Vibes-</h1>
+                    <ul className="TagsList">
+                        {data.tags.map((item,index) => (
+                            <li className="TagItem" key={index}>
+                                <a href={`/${item.type}/${item.songid}`}>
+                                    <p>{item.vibe}</p>
+                                    <p>{item.song_name}</p>
+                                    <img src={item.song_url}></img>
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                    <h1>-Comments-</h1>
+                    <ul className="CommentsList">
+                        {data.comments.map((item,index) => (
+                            <li className="CommentItem" key={index}>
+                                <a href={`/${item.type}/${item.track_id}`}>
+                                    <p>{item.content}</p>
+                                    <p>{item.date}</p>
+                                    <p>{item.song_name}</p>
+                                    <img src={item.song_url}></img>
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
         </>
     )
