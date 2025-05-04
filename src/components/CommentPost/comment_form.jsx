@@ -109,7 +109,7 @@ export default function CreatePost() {
 			alert("You need to be logged in to reply.");  // Show an alert message
 			return;  // Exit the function early if not logged in
 		}
-	
+        console.log(replyingTo);
         setReplyingTo(id);
         setContent('');
     };
@@ -164,7 +164,7 @@ export default function CreatePost() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 content,
-                parent_comment: replyingTo === 'root' ? null : replyingTo,
+                parent_comment: replyingTo,
                 last_segment
             }),
         });
@@ -239,19 +239,13 @@ export default function CreatePost() {
                     )}
 
                     {/* Commented out the Delete button section */}
-                    {/*
+                    
                     {sessionUser === comment.username && (
                         <button className="DeleteButton" style={{
-                            padding: '5px 10px',
-                            backgroundColor: '#ffc107',
-                            color: '#fff',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                            marginLeft: '10px'
+                            backgroundColor: 'orange'
                         }}>Delete</button>
                     )}
-                    */}
+                   
 
                     {renderComments(comments, comment.id, level + 1)}
                 </div>
@@ -264,7 +258,7 @@ export default function CreatePost() {
                 <div className="InputArea" style={{ marginBottom: '20px' }}>
                     <button className="CreateComment" onClick={openTopCommentForm} style={{
                         padding: '10px 15px',
-                        backgroundColor: '#007bff',
+                        backgroundColor: 'orange',
                         color: '#fff',
                         border: 'none',
                         borderRadius: '5px',
@@ -292,7 +286,7 @@ export default function CreatePost() {
                         onClick={submitCommentForm}
                         style={{
                             padding: '5px 10px',
-                            backgroundColor: '#007bff',
+                            backgroundColor: 'orange',
                             color: '#fff',
                             border: 'none',
                             borderRadius: '5px',

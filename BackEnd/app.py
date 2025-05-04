@@ -116,17 +116,14 @@ def get_tags():
 def create_post():
     try :
         data = request.get_json()
-        print(data)
         body = data.get("content")
         parent_comment = data.get("parent_comment")
         song = data.get("last_segment")
         if not body:
             return jsonify({'error': 'Please Enter Text'}), 400
         with engine.connect() as conn:
-            insert_comment(conn, 1, song, body)
+            insert_comment(conn, 1, song, body, parent_comment)
             return jsonify({"message" : "Comment Successfully Created"}), 200
-            insert_comment(conn, session["userID"], song, body, parent_comment)
-        return jsonify({"message" : "Successfully created comment"}), 200
     except Exception as e:
         # Catch any exception and return a 500 error with the exception message
         return jsonify({'error': f'Internal server error: {str(e)}'}), 500
@@ -172,7 +169,6 @@ def user_comment_activity(user):
 # check to see if session is set
 @app.route('/check-session', methods=['GET'])
 def check_session():
-    print("=================")
     print(session)
     if 'email' in session:
         print(f"Session data: {session}")
