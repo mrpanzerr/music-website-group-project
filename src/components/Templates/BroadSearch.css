@@ -1,0 +1,70 @@
+/* 
+* Author: Max Collins
+* Date: 4/25/2025
+* Description: CSS file for BroadSearch.tsx
+*/
+
+/* General page styling */
+.BroadSearch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Header text styling */
+.BroadSearch h1 {
+    font-family: "Baumans", sans-serif;
+    font-size: 3rem;
+    color: #FFFFFF;
+    text-align: center;
+    margin: 10;
+}
+
+/* Section grid styling */
+.BroadSearch ul {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    list-style: none;
+    background-color: #1f1d1d;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 3rem;
+}
+
+/* Styling for individual items in the grid */
+.BroadSearch li {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-align: center;
+    padding: 1rem;
+    gap: 2rem;
+    border-color: #FBB03B;
+    border-style: ridge;
+    border-width: 3px;
+}
+
+.BroadSearch li:hover {
+    background-color: #363333;
+    transition: background-color 0.2s ease;
+}
+
+.BroadSearch p {
+    font-size: 1.2rem;
+}
+
+/* Color of text links */
+.BroadSearch a {
+    color: #FFFFFF;
+    justify-self: center;
+}
+
+/* Image styling */
+.BroadSearch img {
+    height: auto;
+    width: 100%;
+    margin: 0;
+    object-fit: contain;
+}

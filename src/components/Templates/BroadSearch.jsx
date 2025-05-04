@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import './BroadSearch.css';
 
 
 const BroadSearch = () => {
@@ -20,8 +21,9 @@ const BroadSearch = () => {
         return <div>Loading...</div>;
     }
     return (
-        <div>
-            <ul className="ArtistList">Artists
+        <div className="BroadSearch">
+            <h1>-Artists-</h1>
+            <ul className="ArtistList">
                 {(data.artists).map((item,index) => (
                     <li className="ArtistItem">
                         <a key={index} href={`/artist/${item.id}`}>
@@ -31,7 +33,8 @@ const BroadSearch = () => {
                     </li>
                 ))}
             </ul>
-            <ul className="AlbumList">Albums
+            <h1>-Albums-</h1>
+            <ul className="AlbumList">
                 {(data.albums).map((item,index) => (
                     <li className="AlbumItem">
                         <a key={index} href={`/album/${item.id}`}>
@@ -41,7 +44,8 @@ const BroadSearch = () => {
                     </li>
                 ))}
             </ul>
-            <ul className="TrackList">Tracks
+            <h1>-Tracks-</h1>
+            <ul className="TrackList">
                 {(data.tracks).map((item,index) => (
                     <li className="TrackItem">
                         <a key={index} href={`/track/${item.id}`}>

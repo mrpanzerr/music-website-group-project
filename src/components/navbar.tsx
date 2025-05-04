@@ -79,8 +79,11 @@ const Navbar = () => {
 
 				{sessionSet != '' && (
 					<div className="loggedin-buttons">
+						<li className="signup">
+							<Link to={`/user/${sessionSet}`}>{sessionSet}</Link>
+						</li>
 						<li className="log">
-							<Link onClick={handleLogout}>Logout</Link>  <Link to={`/user/${sessionSet}`}>{sessionSet}</Link>
+							<Link onClick={handleLogout}>Logout</Link>
 						</li>
 					</div>
 				)}

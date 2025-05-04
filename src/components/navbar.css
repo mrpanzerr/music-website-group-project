@@ -41,7 +41,7 @@
     border-radius: 5px;
 }
 
-/* Background color for the sign up button */
+/* Background color for the sign up and user buttons */
 .signup a {
     background-color: #FBB03B;
 }
@@ -52,7 +52,7 @@
 }
 
 /* Hover effect for buttons */
-.log a:hover {
+.login a:hover {
     box-shadow: 0 0 5px #F7931E;
 }
 
@@ -112,6 +112,12 @@
     }
 
     .loggedout-buttons {
+        position: static;
+        margin: 0 0 10px 0;
+        padding: 0;
+    }
+
+    .loggedin-buttons {
         position: static;
         margin: 0 0 10px 0;
         padding: 0;
