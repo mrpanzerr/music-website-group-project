@@ -23,7 +23,7 @@ export default function UserPage() {
         <>
             <div>
                 <div className="page-header">
-					<h1 className="sideB">-User-</h1>
+					<h1 className="sideB">{username}</h1>
 					<img src="../public/images/playbackarrow.png"></img>
 				</div>
                 <div className="UserPage">
