@@ -190,7 +190,7 @@ const PageTemplate = ({ data }) => {
 					<div className="tracksSection">
 						<h2 className="tracksHeader">-Tracks-</h2>
 						<ul className="albumTracks">
-							{albumtracks.map(([trackName, trackId], index) => (
+							{albumtracks.map(([trackName, trackId, albumImage], index) => (
 							<li key={index}>
 								<a href={`/track/${trackId}`}>
 								{trackName}
