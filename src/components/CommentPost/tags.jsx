@@ -160,11 +160,11 @@ export default function TagSection() {
         <div className="TagSection">
             <p>Select a Vibe</p>
             <ul className="TagList">
-                    <li className="hate" onClick={handleClick}><img className="hatepic" src="https://openmoji.org/data/color/svg/1F922.svg"></img>{data.hate || 0}</li>
-                    <li className="angry" onClick={handleClick}><img className="angrypic" src="https://openmoji.org/data/color/svg/1F928.svg"></img>{data.angry || 0}</li>
-                    <li className="okay" onClick={handleClick}><img className="okaypic" src="https://openmoji.org/data/color/svg/1F642.svg"></img>{data.okay || 0}</li>
-                    <li className="amazing" onClick={handleClick}><img className="amazingpic" src="https://openmoji.org/data/color/svg/1F600.svg"></img>{data.amazing || 0}</li>
-                    <li className="love" onClick={handleClick}><img className="lovepic" src="https://openmoji.org/data/color/svg/1F60D.svg"></img>{data.love || 0}</li>
+                    <li className="hate" onClick={handleClick}><img className="hatepic" src="https://openmoji.org/data/color/svg/1F922.svg"></img>{/*data.hate || 0*/}</li>
+                    <li className="angry" onClick={handleClick}><img className="angrypic" src="https://openmoji.org/data/color/svg/1F928.svg"></img>{/*data.angry || 0*/}</li>
+                    <li className="okay" onClick={handleClick}><img className="okaypic" src="https://openmoji.org/data/color/svg/1F642.svg"></img>{/*data.okay || 0*/}</li>
+                    <li className="amazing" onClick={handleClick}><img className="amazingpic" src="https://openmoji.org/data/color/svg/1F600.svg"></img>{/*data.amazing || 0*/}</li>
+                    <li className="love" onClick={handleClick}><img className="lovepic" src="https://openmoji.org/data/color/svg/1F60D.svg"></img>{/*data.love || 0*/}</li>
 
             </ul>
         </div>

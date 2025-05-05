@@ -86,3 +86,9 @@
     height: 12rem;
     background-color: #2a2828;
 }
+.TagItem img {
+    width: 30%;
+}
+.CommentItem img {
+    width: 30%;
+}
