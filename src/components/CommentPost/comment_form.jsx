@@ -19,7 +19,7 @@ import checkSession from './session.jsx';
 
 export default function CreatePost() {
     const [data, setData] = useState([]);
-    const [replyingTo, setReplyingTo] = useState(null);
+    const [replyingTo, setReplyingTo] = useState('');
     const [content, setContent] = useState('');
     const [sessionUser, setSessionUser] = useState('');
     const inputRef = useRef(null);
@@ -66,9 +66,31 @@ export default function CreatePost() {
             body: JSON.stringify({ last_segment }),
         })
             .then(res => res.json())
-            .then(setData)
-            .catch(err => console.error('Error fetching comments', err));
+            .then(responseData => {
+                if (responseData.posted == true) {
+                    setData(responseData.data)
+                }else {
+                    setData([])
+                }
+            }).catch(error => {
+                console.log(`Error fetching comments: ${error}`);
+                setData([])
+            })
     };
+
+
+    const deleteComment = (id) => {
+        fetch("http://127.0.0.1:5000/deletepost", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id }),
+        }).then(res => res.json()).then(responseData => {
+            console.log(responseData);
+            fetchComments();
+        })
+
+    }
 
 	/*
 	 * Purpose: Opens the comment form for creating a new top-level comment (not a reply). 
@@ -86,7 +108,7 @@ export default function CreatePost() {
     const openTopCommentForm = () => {
         checkSession().then(session => {
             if (!session) return alert("You must sign in to comment.");
-            setReplyingTo('root');
+            setReplyingTo(null);
             setContent('');
         });
     };
@@ -109,7 +131,7 @@ export default function CreatePost() {
 			alert("You need to be logged in to reply.");  // Show an alert message
 			return;  // Exit the function early if not logged in
 		}
-	
+        console.log(replyingTo);
         setReplyingTo(id);
         setContent('');
     };
@@ -127,7 +149,7 @@ export default function CreatePost() {
 	 * Expected extensions or revisions: Could be enhanced with a confirmation before canceling.
 	 */
     const cancelReply = () => {
-        setReplyingTo(null);
+        setReplyingTo('');
         setContent('');
     };
 
@@ -164,7 +186,7 @@ export default function CreatePost() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 content,
-                parent_comment: replyingTo === 'root' ? null : replyingTo,
+                parent_comment: replyingTo,
                 last_segment
             }),
         });
@@ -186,11 +208,15 @@ export default function CreatePost() {
 	 * Expected extensions or revisions: Could be optimized to improve performance with larger comment threads.
 	 */
     const renderComments = (comments, parent = null, level = 0) => {
-        const spacing = 40;
+        if (data == []) {
+            return (<div>You Must Comment to See Other Comments</div>)
+        }
+        else {
+        let spacing = 40;
         return comments
             .filter(comment => comment.parent_comment === parent)
             .map(comment => (
-                <div className="CommentDiv" key={comment.id} style={{ paddingLeft: `${spacing * level}px`, display: 'block', width: '100%', marginBottom: '10px' }}>
+                <div className="CommentDiv" key={comment.id} style={{paddingLeft: `${spacing * level}px`, display: 'block', width: '100%', marginBottom: '10px' }}>
                     <span className="HeaderField" style={{ fontStyle: 'italic' }}><i>{comment.username}</i> | {comment.date}</span><br />
                     <span className="ContentField">{comment.content}</span><br />
                     {replyingTo === comment.id ? (
@@ -203,7 +229,6 @@ export default function CreatePost() {
                                 onChange={handleChange}
                                 style={{
                                     width: '100%',
-                                    padding: '8px',
                                     marginTop: '10px',
                                     borderRadius: '5px',
                                     border: '1px solid #ccc'
@@ -213,7 +238,7 @@ export default function CreatePost() {
                                 className="SubmitComment"
                                 onClick={submitCommentForm}
                                 style={{
-                                    padding: '5px 10px',
+                                    padding: '5px 10px 5px 0px',
                                     backgroundColor: '#007bff',
                                     color: '#fff',
                                     border: 'none',
@@ -225,7 +250,7 @@ export default function CreatePost() {
                                 className="CancelButton"
                                 onClick={cancelReply}
                                 style={{
-                                    padding: '5px 10px',
+                                    padding: '5px 10px 5px 0px',
                                     backgroundColor: '#dc3545',
                                     color: '#fff',
                                     border: 'none',
@@ -238,33 +263,27 @@ export default function CreatePost() {
                         <button className="ReplyButton" onClick={() => changeTarget(comment.id)} style={{ textDecoration: 'underline', cursor: 'pointer' }}>Reply</button>
                     )}
 
-                    {/* Commented out the Delete button section */}
-                    {/*
-                    {sessionUser === comment.username && (
-                        <button className="DeleteButton" style={{
-                            padding: '5px 10px',
-                            backgroundColor: '#ffc107',
-                            color: '#fff',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                            marginLeft: '10px'
+                    
+                    {sessionUser === comment.username && comment.content !== "[DELETED]" &&(
+                        <button className="DeleteButton" onClick={() => deleteComment(comment.id)} style={{
+                            backgroundColor: 'orange'
                         }}>Delete</button>
                     )}
-                    */}
+                   
 
-                    {renderComments(comments, comment.id, level + 1)}
+                    {renderComments(comments, comment.id, 1)}
                 </div>
             ));
+        }
     };
 
     return (
         <div className="CommentContainer" style={{ display: 'block', width: '100%' }}>
-            {replyingTo !== 'root' && (
+            {replyingTo !== null && (
                 <div className="InputArea" style={{ marginBottom: '20px' }}>
                     <button className="CreateComment" onClick={openTopCommentForm} style={{
                         padding: '10px 15px',
-                        backgroundColor: '#007bff',
+                        backgroundColor: 'orange',
                         color: '#fff',
                         border: 'none',
                         borderRadius: '5px',
@@ -272,7 +291,7 @@ export default function CreatePost() {
                     }}>Create Comment</button>
                 </div>
             )}
-            {replyingTo === 'root' && (
+            {replyingTo === null && (
                 <div className="InputArea" style={{ marginBottom: '20px' }}>
                     <textarea
                         ref={inputRef}
@@ -292,7 +311,7 @@ export default function CreatePost() {
                         onClick={submitCommentForm}
                         style={{
                             padding: '5px 10px',
-                            backgroundColor: '#007bff',
+                            backgroundColor: 'orange',
                             color: '#fff',
                             border: 'none',
                             borderRadius: '5px',

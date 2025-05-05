@@ -22,7 +22,7 @@
  Expected extensions/revisions: The code may be extended to handle more complex queries or additional table operations.
 """
 
-from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, CHAR, MetaData, Table, DateTime, insert, select, func, update, and_
+from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, CHAR, MetaData, Table, DateTime, insert, select, func, update, and_, update
 from dotenv import load_dotenv
 from datetime import datetime
 
@@ -159,6 +159,16 @@ def insert_comment(conn, user_id, song_id, content, parent_comment_id=None):
     conn.commit()
     return f"comment with ID: {result.inserted_primary_key[0]} inserted"
 
+def delete_comment(conn, comment_id, user_id):
+    try:
+        statement = update(Comments).where(and_(Comments.c.commentID == comment_id, Comments.c.userID == user_id)).values({"content": "[DELETED]"})
+        conn.execute(statement)
+        conn.commit()
+        return f"Deleted comment with ID: {comment_id}"
+    except Exception as e:
+        return f"Error deleting comment with ID: {comment_id}, error: {e}"
+
+
 def select_user(conn, email):
     statement = select(Users).where(Users.c.email == email)
     result = conn.execute(statement).fetchone()
@@ -177,7 +187,7 @@ def select_user_id(conn, id):
     if user_search != None:
         return user_search[0]
     else:
-        "not found"
+        "[DELETED]"
 
 def get_song_posts(conn, song):
     comment_search = conn.execute(select(Comments).where(Comments.c.songID == song))
@@ -229,13 +239,7 @@ def select_tags_song(conn, song):
         resultdict.setdefault(i[0],i[1])
     return resultdict
 
-# with engine.connect() as conn:
-#     print(check_tag(conn, "2nTjd2lNo1GVEfXM3bCnsh", 50))
-#     # for i in range(10,14):
-#     #     create_tag(conn, 'hate', '73cZMVThj3x9ntYUT29hwD', i)
-#     test = select_tags_song(conn, '73cZMVThj3x9ntYUT29hwD')
-#     for i in test:
-#         print(i)
+
 def select_song_info(conn, song):
     results = conn.execute(select(Songs).where(Songs.c.songID == song)).fetchone()
     return results
@@ -253,4 +257,4 @@ with engine.connect() as conn:
 
 
 with engine.connect() as conn:
-    print(select_song_info(conn,"7gfkYbxpguEc9bm6m8TpAr"))
+    delete_comment(conn, 19, 2)
