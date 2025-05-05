@@ -78,7 +78,17 @@ export default function CreatePost() {
             })
     };
 
-
+// Purpose: To handle the deletion of comments by sending a request to the backend API.
+// Author: Ryan
+// Date Written: 5.4.25
+// Last Revised: 5.4.25
+// Called By: The delete button in the comment UI.
+// System Context: Allows a user to get rid of comments information, but the comment itself will not be deleted to maintain struture
+// Data Structures: N/A
+// Algorithms Used: N/A
+// Inputs: the id of the comment to be deleted.
+// Outputs: A response from the backend indicating success or failure of the deletion.
+// Future Changes: As of 5.4.25 no changes are needed.
     const deleteComment = (id) => {
         fetch("http://127.0.0.1:5000/deletepost", {
             method: "POST",
@@ -88,6 +98,8 @@ export default function CreatePost() {
         }).then(res => res.json()).then(responseData => {
             console.log(responseData);
             fetchComments();
+        }).catch(error => {
+            console.log(`Error deleting comment: ${error}`);
         })
 
     }
@@ -214,7 +226,9 @@ export default function CreatePost() {
         else {
         let spacing = 40;
         return comments
+        //Filter comments to only include those that match the parent comment ID
             .filter(comment => comment.parent_comment === parent)
+            //Use map to iterate over the filtered comments and render each one
             .map(comment => (
                 <div className="CommentDiv" key={comment.id} style={{paddingLeft: `${spacing * level}px`, display: 'block', width: '100%', marginBottom: '10px' }}>
                     <span className="HeaderField" style={{ fontStyle: 'italic' }}><i>{comment.username}</i> | {comment.date}</span><br />
@@ -263,14 +277,14 @@ export default function CreatePost() {
                         <button className="ReplyButton" onClick={() => changeTarget(comment.id)} style={{ textDecoration: 'underline', cursor: 'pointer' }}>Reply</button>
                     )}
 
-                    
+            
                     {sessionUser === comment.username && comment.content !== "[DELETED]" &&(
                         <button className="DeleteButton" onClick={() => deleteComment(comment.id)} style={{
                             backgroundColor: 'orange'
                         }}>Delete</button>
                     )}
                    
-
+                    // Render replies recursively
                     {renderComments(comments, comment.id, 1)}
                 </div>
             ));

@@ -96,7 +96,7 @@ Comments = Table(
     Expected output: A success message indicating the ID of the inserted song.
     Expected extensions/revisions: As of 5.4.25, there are no expected extensions or revisions to this method.
 """
-def insert_song(conn, song_id, name, type, image="images/no_result.png"):
+def insertSong(conn, song_id, name, type, image="images/no_result.png"):
     try:
         # Insert structure with sqlalchemy
         insert_statement = insert(Songs).values(
@@ -129,7 +129,7 @@ def insert_song(conn, song_id, name, type, image="images/no_result.png"):
     Expected output: A success message indicating the ID of the inserted user.
     Expected extensions/revisions: As of 5.4.25, there are no expected extensions or revisions to this method.
 """
-def insert_user(conn, username, password, email):
+def insertUser(conn, username, password, email):
     try:
         insert_statement = insert(Users).values(
             username=username,
@@ -164,7 +164,7 @@ def insert_user(conn, username, password, email):
     Expected output: A success message indicating the ID of the inserted comment.
     Expected extensions/revisions: Extend to handle comment upvoting/downvoting or additional features.
 """
-def insert_comment(conn, user_id, song_id, content, parent_comment_id=None):
+def insertComment(conn, user_id, song_id, content, parent_comment_id=None):
     try:
         insert_statement = insert(Comments).values(
             userID=user_id,
@@ -193,7 +193,7 @@ def insert_comment(conn, user_id, song_id, content, parent_comment_id=None):
 # Inputs: A comment ID, user ID, and a connection to the database.
 # Outputs: A ressponse indicating the success or failure of the deletion operation.
 # Future Changes: As of 5.4.25, there are no expected changes to this method.
-def delete_comment(conn, comment_id, user_id):
+def deleteComment(conn, comment_id, user_id):
     try:
         statement = update(Comments).where(and_(Comments.c.commentID == comment_id, Comments.c.userID == user_id)).values({"content": "[DELETED]"})
         conn.execute(statement)
@@ -217,7 +217,7 @@ def delete_comment(conn, comment_id, user_id):
 # Inputs: A connection to the database and the user's email.
 # Outputs: None if entry doesnt exist, the entry if it does.
 # Future Changes: As of 5.4.25, there are no expected changes to this method.
-def select_user(conn, email):
+def selectUserFromEmail(conn, email):
     try:
         statement = select(Users).where(Users.c.email == email)
         #fetchone() will return a single row or None if no match is found
@@ -241,7 +241,7 @@ def select_user(conn, email):
 # Inputs: A connection to the database and the user's username.
 # Outputs: The user's ID if it exists, or None if it does not.
 # Future Changes: As of 5.4.25, there are no expected changes to this method.
-def select_user_username(conn, user):
+def selectUserIDFromUsername(conn, user):
     try:
         id_search = conn.execute(select(Users.c.userID).where(Users.c.username == user)).fetchone()
         #The first item in the tuple is the userID, if it exists
@@ -263,7 +263,7 @@ def select_user_username(conn, user):
 # Inputs: A database connection and a user ID.
 # Outputs: A users username if it exists, or a placeholder string if it does not.
 # Future Changes: As of 5.4.25, there are no expected changes to this method.                            
-def select_user_id(conn, id):
+def selectUserFromID(conn, id):
     try:
         user_search = conn.execute(select(Users.c.username).where(Users.c.userID == id)).fetchone()
         if user_search != None:
@@ -289,7 +289,7 @@ def select_user_id(conn, id):
 # Inputs: A songs ID and a connection to the database.
 # Outputs: An iterable object containing all comments associated with the song.
 # Future Changes: As of 5.4.25, there are no expected changes to this method.
-def get_song_posts(conn, song):
+def selectPostsFromSong(conn, song):
     try:
         comment_search = conn.execute(select(Comments).where(Comments.c.songID == song))
         return comment_search
@@ -309,7 +309,7 @@ def get_song_posts(conn, song):
 # Inputs: username and email strings, and a connection to the database.
 # Outputs: A message indicating whether the username or email already exists in the database, or if there are no matches.
 # Future Changes: As of 5.4.25, there are no expected changes to this method.
-def check_user(conn, username, email):
+def checkUserExistence(conn, username, email):
     try:
         user_search = conn.execute(select(Users).where(Users.c.username == username)).fetchone()
         email_search = conn.execute(select(Users).where(Users.c.email == email)).fetchone()
@@ -336,7 +336,7 @@ def check_user(conn, username, email):
 # Inputs: A database connection, a tag value, a song ID, and a user ID.
 # Outputs: A message indicating whether the tag was created or updated, or an error message if something goes wrong.
 # Future Changes: 
-def insert_tag(conn, value, song, id):
+def insertTag(conn, value, song, id):
     try:
         #Tag must have a value 
         if value != "":
@@ -374,7 +374,7 @@ def insert_tag(conn, value, song, id):
 # Inputs: A connection to the database, a song ID, and a user ID.
 # Outputs: A string indicating the user's tag on the song, or "No Tag" if they have no tag.
 # Future Changes: As of 5.4.25, there are no expected changes to this method.
-def check_tag(conn, song, user):
+def selectUsersTag(conn, song, user):
     try:
         test = conn.execute(select(Tags).where(and_(Tags.c.songID == song, Tags.c.userID == user))).fetchone()
         if test != None:
@@ -399,7 +399,7 @@ def check_tag(conn, song, user):
 # Inputs: A database connection and a song ID.
 # Outputs: A dictionary where the keys are tag names and the values are the number of occurrences of each tag.
 # Future Changes: As of 5.4.25, there are no expected changes to this method.
-def select_tags_song(conn, song):
+def selectTagsFromSong(conn, song):
     try:
         resultdict = {}
         results = conn.execute(select(Tags.c.tag, func.count().label('occurrences')).where(Tags.c.songID == song).group_by(Tags.c.tag))
@@ -426,7 +426,7 @@ def select_tags_song(conn, song):
 # Inputs: A database connection and a song ID.
 # Outputs: A iterable containing entries in tuple form.
 # Future Changes: As of 5.4.25, there are no expected changes to this method.
-def select_song_info(conn, song):
+def selectSong(conn, song):
     try:
         results = conn.execute(select(Songs).where(Songs.c.songID == song)).fetchone()
 
@@ -448,7 +448,7 @@ def select_song_info(conn, song):
 # Inputs: A database connection and a user ID.
 # Outputs: A iterable object containing all tags associated with the user.
 # Future Changes: As of 5.4.25, there are no expected changes to this method.
-def select_user_tags(conn, user):
+def selectUsersTags(conn, user):
     try:
         results = conn.execute(select(Tags).where(Tags.c.userID == user))
 
@@ -470,10 +470,10 @@ def select_user_tags(conn, user):
 # Inputs: a database connection and a user ID.
 # Outputs: An iterable object containing all comments associated with the user.
 # Future Changes: As of 5.4.25, there are no expected changes to this method.
-def select_user_comments(conn, user):
+def selectUsersComments(conn, user):
     try:
         results = conn.execute(select(Comments).where(Comments.c.userID == user))
-        
+
         return results
     
     except Exception as e:

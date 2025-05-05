@@ -24,7 +24,7 @@ from flask_bcrypt import Bcrypt
 from main import general_search, get_token, artist_search, track_search, album_search
 from sqlalchemy import create_engine
 from datetime import datetime
-from db import insert_comment, insert_song, insert_user, select_user, check_user, get_song_posts, select_user_id, select_tags_song, insert_tag, check_tag, select_user_tags, select_user_comments, select_user_username, select_song_info, delete_comment
+from db import insertComment, insertSong, insertUser, selectUserFromEmail, checkUserExistence, selectTagsFromSong, selectUserFromID, selectTagsFromSong, insertTag, selectUsersTag, selectUsersTags, selectUsersComments, selectUserIDFromUsername, selectSong, deleteComment, selectPostsFromSong
 from sqlalchemy.exc import IntegrityError
 from dotenv import load_dotenv
 import os
@@ -143,7 +143,7 @@ def create_tag():
 
             if session["userID"]:
                 #Checks if the tag already exists for the song and user, if not, inserts the new tag into the database.
-                insert_tag(conn, tag, song, session["userID"])
+                insertTag(conn, tag, song, session["userID"])
 
                 return jsonify({"message" : "Tag Created Successfully"}), 200
             
@@ -177,8 +177,8 @@ def get_tags():
         song = data.get("songID")
         with engine.connect() as conn:
             #Not only gets the tag data, but also gets the tag associated with the user so they can see what tag they have with this song
-            result = select_tags_song(conn, song)
-            result.setdefault("exists", check_tag(conn, song, session["userID"]))
+            result = selectTagsFromSong(conn, song)
+            result.setdefault("exists", selectUsersTag(conn, song, session["userID"]))
 
             return result
         
@@ -214,7 +214,7 @@ def create_post():
             return jsonify({'error': 'Please Enter Text'}), 400
         
         with engine.connect() as conn:
-            insert_comment(conn, session["userID"], song, body, parent_comment)
+            insertComment(conn, session["userID"], song, body, parent_comment)
 
             return jsonify({"message" : "Comment Successfully Created"}), 200
         
@@ -246,7 +246,7 @@ def deletepost():
         commentID = data.get("id")
         with engine.connect() as conn:
 
-            delete_comment(conn, commentID, userID)
+            deleteComment(conn, commentID, userID)
 
         return jsonify({"message" : "Comment Deleted Successfully"}), 200
     
@@ -279,7 +279,7 @@ def get_posts():
         user_in = False
         with engine.connect() as conn:
             #This function will return all the posts associated with a song in an iterable.
-            results = get_song_posts(conn, songID)
+            results = selectPostsFromSong(conn, songID)
             submit = []
             #Loops through the results and formats them into a list of dictionaries.
             for item in results:
@@ -287,10 +287,10 @@ def get_posts():
                     "id" : item[0],
                     "content" : item[1],
                     "date" : item[2].strftime(string_format),
-                    "username" : select_user_id(conn,item[3]),
+                    "username" : selectUserFromID(conn,item[3]),
                     "parent_comment" : item[5]})
                 #Checks if the user has commented on the song, if they have, user_in is set to True.
-                if select_user_id(conn,item[3]) == session.get("username"):
+                if selectUserFromID(conn,item[3]) == session.get("username"):
                     user_in = True
         #If the user has commented, the function will return a JSON response with the posts and a boolean indicating that the user has commented.
         if user_in:
@@ -326,25 +326,25 @@ def user_comment_activity(user):
         username = user
         with engine.connect() as conn:
             #Gets the userID from the username
-            userID = select_user_username(conn, username)
+            userID = selectUserIDFromUsername(conn, username)
             #User comments and tags stored in iterables
-            comments_list = select_user_comments(conn, userID)
-            tags_list = select_user_tags(conn, userID)
+            comments_list = selectUsersComments(conn, userID)
+            tags_list = selectUsersTags(conn, userID)
             #Uses list comprehensions to format the comments and tags into a dictionary that can be returned to the front end.
             #Admittably, this is a bit of a hacky way to do it, but its more easier to understand this way.
             results_dict = {"tags": [{
                                     "vibe" : tag[0],
                                     "songid" : tag[1],
-                                    "song_name" : select_song_info(conn, tag[1])[1],
-                                    "song_url" : select_song_info(conn, tag[1])[2],
-                                    "type" : select_song_info(conn, tag[1])[3]}for tag in tags_list],
+                                    "song_name" : selectSong(conn, tag[1])[1],
+                                    "song_url" : selectSong(conn, tag[1])[2],
+                                    "type" : selectSong(conn, tag[1])[3]}for tag in tags_list],
                             "comments": [{
                                     "content" : comment[1], 
                                     "date" : comment[2].strftime(string_format),
                                     "songid" : comment[4],
-                                    "song_name" : select_song_info(conn, comment[4])[1],
-                                    "song_url" : select_song_info(conn, comment[4])[2],
-                                    "type" : select_song_info(conn,comment[4])[2]} for comment in comments_list]}
+                                    "song_name" : selectSong(conn, comment[4])[1],
+                                    "song_url" : selectSong(conn, comment[4])[2],
+                                    "type" : selectSong(conn,comment[4])[2]} for comment in comments_list]}
             
             return results_dict
         
@@ -444,7 +444,7 @@ def signup():
 
         with engine.connect() as conn:
             # Checks if the username already exists in the database
-            email_check = select_user(conn,email)
+            email_check = selectUserFromEmail(conn,email)
 
             if email_check:
                 return jsonify({'error': 'Email already exists'}), 409
@@ -454,7 +454,7 @@ def signup():
  
         with engine.connect() as conn:
             #Insertion of the new user into the database happens here
-            result = insert_user(conn, username, hashed_password, email)
+            result = insertUser(conn, username, hashed_password, email)
             session["userID"] = result
             session["username"] = username
             session["email"] = email
@@ -464,7 +464,7 @@ def signup():
     except IntegrityError as e:
         #Handle integrity error, such as duplicate username or email and displays it in error message
         with engine.connect() as conn:
-            user_status = check_user(conn, username, email)
+            user_status = checkUserExistence(conn, username, email)
         return jsonify({'error': user_status}), 500
 
 
@@ -494,7 +494,7 @@ def login():
             return jsonify({'error': 'Email and password are required'}), 400
         # Check if the email exists in the database
         with engine.connect() as conn:
-            result = select_user(conn, email)
+            result = selectUserFromEmail(conn, email)
         # To verify that the user exists, the hashed password and password provided by the request are compared
         if result != None and bcrypt.check_password_hash(result[2], password):
             # If the credentials are valid, set the session data

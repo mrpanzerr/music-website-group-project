@@ -32,7 +32,7 @@ import json
 from requests import post, get
 import json
 from sqlalchemy import create_engine
-from db import insert_song
+from db import insertSong
 
 load_dotenv() # Load environment variables from .env file
 db_password = os.getenv("DB_PASSWORD")
@@ -153,9 +153,9 @@ def general_search(token, search, type, limit):
                 for i in results_list:
                     #Since a tracks data is stored differently by the API, its insertoin is handled differently
                     if i.get("type") == "track":
-                        insert_song(conn, i.get("id"), i.get("name"), i.get("type"), i.get("album"))
+                        insertSong(conn, i.get("id"), i.get("name"), i.get("type"), i.get("album"))
                     else:
-                        insert_song(conn, i.get("id"), i.get("name"), i.get("type"), i.get("image"))
+                        insertSong(conn, i.get("id"), i.get("name"), i.get("type"), i.get("image"))
 
             return results_list
         
