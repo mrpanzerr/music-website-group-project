@@ -12,8 +12,9 @@
     background-color: #363333;
 }
 
+/* General styling for all images */
 img {
-    box-shadow: 0 0 5px #F7931E;
+    box-shadow: 0 0 5px #F7931E; /* Adds a glowing effect to images */
 }
 
 
@@ -30,14 +31,17 @@ img {
     margin: 0 auto;
     box-shadow: 0 0 10px #232323;
 }
+
 .page-header img {
     height: 7rem;
     width: 50%;
     box-shadow: none;
 }
+
 .sideB {
     font-size: 50rem;
 }
+
 /* Tags Area styling */
 .TagSection {
     margin-top: 1rem;
@@ -46,6 +50,7 @@ img {
     color: white;
     font-size: 2rem;
 }
+
 .TagList {
     list-style-type: none;
     display: flex;
@@ -53,6 +58,7 @@ img {
     width: 100%;
     padding: 0;
 }
+
 .TagList li {
     display:flex;
     flex-direction: column;
@@ -60,14 +66,17 @@ img {
     text-align: center;
     font-size: 2rem;
 }
+
 .TagList #current {
     color: orange;
 }
+
 .TagList li img {
     box-shadow: none;
     margin-bottom: -2rem;
     margin-top: -2rem;
 }
+
 /* Page Footer styling */
 .template-footer {
     display: flex;
@@ -78,11 +87,14 @@ img {
     width: 98%;
     margin: 15px auto;
 }
+
+/* Comments styling */
 .CommentContainer {
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .InputArea {
     justify-self: center;
     display: flex;
@@ -92,29 +104,35 @@ img {
     padding-top: 1rem;
     border-top: 2px solid orange;
 }
+
 .InputArea textarea {
     width: 50%;
     justify-self: center;
     align-self: center;
 }
+
 .InputArea button {
     align-self: center;
 }
+
 .CreateComment {
     justify-self: center;
     font-size: 1em;
     width: 100%;
 }
+
 .ReplyButton {
     margin: none;
     margin-left: .5rem;
 }
+
 .HeaderField {
     display: block;
     margin-top: 2rem;
     color: orange;
     margin-left: .5rem;
 }
+
 .ContentField {
     background-color: rgb(192, 192, 192);
     width: 90%;
@@ -123,11 +141,13 @@ img {
     padding-bottom: 2%;
     margin-left: 1rem;
 }
+
 .ContentArea {
     margin-bottom: 1rem;
 }
 
 /* Page Header logo */
+/* No longer used */
 .arrow-container {
     display: flex;
     align-items: center;
@@ -150,6 +170,7 @@ img {
     margin: 0px;
 }
 
+/* Page Header text styling */
 .sideB {
     font-family: 'Baumans', sans-serif;
     font-size: 4rem;
@@ -179,6 +200,7 @@ img {
     align-content: center;
     font-size: 3vh;
 }
+
 .titleHeader {
     font-size: 20vh;
     margin: auto;
@@ -191,17 +213,20 @@ img {
     padding: 1rem;
     text-align: center;
 }
+
 .flex img{
     width: 90%;
     display: flex;
     margin: 2rem;
     margin: auto;
 }
+
 .trackImage {
     justify-self: center;
 }
+
 .trackImage img {
-    box-shadow: 0 0 10px #232323;
+    box-shadow: 0 0 10px #232323; /* Replaces general image glow */
 }
 
 .trackInfo {
@@ -224,12 +249,12 @@ img {
 }
 
 /* Album page styling */
-
 .albumImage {
     justify-self: center;
 }
+
 .albumImage img {
-    box-shadow: 0 0 10px #232323;
+    box-shadow: 0 0 10px #232323; /* Replaces general image glow */
 }
 
 .albumInfo {
@@ -252,6 +277,7 @@ img {
     color: #FFFFFF;
 }
 
+/* Page divider */
 .divider {
     width: 98%;
     height: 2px;
@@ -259,6 +285,7 @@ img {
     margin: 20px auto;
 }
 
+/* Tracks section styling */
 .tracksSection {
     display: flex;
     flex-direction: column;
@@ -296,11 +323,13 @@ img {
     margin-bottom: 3rem;
     width: fit-content;
 }
+
 .albumTracks li {
     font-size: 4vh;
     margin-left: 10%;
     width: 70%;
 }
+
 .albumTracks a {
     color: #FFFFFF;
 }
@@ -314,6 +343,7 @@ img {
     align-items: center;
     width: 70%;
 }
+
 .artistInfo {
     list-style: none;
     color: #FFFFFF;
@@ -340,6 +370,7 @@ img {
     justify-self: center;
     font-size: 7vh;
 }
+
 /* Top tracks section styling */
 .flex-artist {
     width: 100%;
@@ -347,12 +378,15 @@ img {
     align-items: center;
     justify-content: center;
 }
+
 .artistImage {
     justify-content: center;
 }
+
 .artistImage img {
     box-shadow: 0 0 10px #232323;
 }
+
 .artistTopTracks {
     display: flex;
     flex-direction: column;

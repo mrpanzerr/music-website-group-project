@@ -4,6 +4,7 @@
 * Description: CSS file for App.tsx
 */
 
+/* Import Google Fonts for the Baumans font */
 @import url("https://fonts.googleapis.com/css2?family=Baumans&display=swap");
 
 /* Page background general settings */
@@ -189,10 +190,8 @@
     width: 98%;
     margin: 0 auto;
 }
+
 .sideB {
-    margin-bottom: -3rem;
-}
-.sideA {
     margin-bottom: -3rem;
 }
 
@@ -210,10 +209,12 @@
 
 /* Styling for different screen sizes */
 @media (max-width: 1110px) {
+    /* Hide the cassette base for less clutter */
     .casette-base {
         visibility: hidden;
     }
 
+    /* Ensures the main content is still visible */
     .casette-content {
         visibility: visible;
         border-radius: 25px 25px 25px 25px;
@@ -230,13 +231,8 @@
 }
 
 @media (max-width: 990px) {
+    /* Hide the arrow in the header */
     .page-header img {
         visibility: hidden;
-    }
-
-    .navbar {
-        flex-direction: column;
-        align-items: center;
-        flex-wrap: wrap;
     }
 }

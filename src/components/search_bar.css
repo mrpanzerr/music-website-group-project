@@ -23,6 +23,7 @@ button:last-child {
 }
 
 /* Button effects */
+/* Buttons turn orange when hovered over and selected */
 button:hover {
     background-color: #FBB03B;
 }
@@ -44,10 +45,12 @@ button:focus {
     color: #FFFFFF;
 }
 
+/* Change the color of the text in the search bar when the user is typing */
 .search-bar:focus {
     color: #FFFFFF;
 }
 
+/* Change the font of only the placeholder text */
 .search-bar:placeholder-shown {
     font-family: "Baumans", sans-serif;
 }

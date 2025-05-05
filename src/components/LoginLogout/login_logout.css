@@ -4,8 +4,10 @@
 * Description: CSS file for logged_in.tsx and logged_out.tsx
 */
 
+/* Importing Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Baumans&display=swap");
 
+/* General page styling */
 .result-page {
     height: 85vh;
     display: flex;
@@ -15,6 +17,7 @@
     color: #FFFFFF;
 }
 
+/* Font styling */
 .result-page h2 {
     font-size: 50px;
     margin-bottom: 10px;
@@ -29,6 +32,7 @@
     text-decoration: none;
 }
 
+/* Button styling */
 .result-page a {
     color: #FFFFFF;
     text-decoration: none;

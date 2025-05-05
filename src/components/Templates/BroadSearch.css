@@ -56,6 +56,8 @@
     border-width: 3px;
 }
 
+/* Hover effect changes items to a lighter color
+    when hovered over to indicate interactivity */
 .BroadSearch li:hover {
     background-color: #363333;
     transition: background-color 0.2s ease;
