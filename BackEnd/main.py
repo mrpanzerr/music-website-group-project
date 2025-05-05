@@ -253,8 +253,14 @@ def broad_search(token,search_value):
             "tracks" : general_search(token, search_value, "track",10),})
     
 
-token = get_token()
-print(broad_search(token, "asd"))
+dict = [{"hello" : "Hello", "Hey" : "Hey"},{"hello" : "Hello", "Hey" : "Hey"}]
+if __name__ == "__main__":
+    dict = {"hello" : "Hello", "Hey" : "Hey"}
+    if "Hello" not in dict:
+        print("hello not dict")
+    else:
+        print("hello in dict")
+
     
 
 
