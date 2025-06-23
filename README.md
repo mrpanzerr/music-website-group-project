@@ -86,7 +86,7 @@ To contribute:
 ## Reports
 Additional information about the creation of the project and media can be found here.
 
-Implementation Presentation: [Presentation](https://github.com/mrpanzerr/music-website-group-project/blob/main/docs/Implementation%20Presentation.pdf)
+Implementation Presentation: [Presentation](https://github.com/mrpanzerr/music-website-group-project/blob/main/docs/Implementation%20Presentation.pdf?raw=true)
 
-Implementation Report: [Report](https://github.com/mrpanzerr/music-website-group-project/blob/main/docs/PlayBack%20%E2%80%93%20Software%20Implementation%20%26%20Testing%20Report.pdf)
+Implementation Report: [Report](https://github.com/mrpanzerr/music-website-group-project/blob/main/docs/PlayBack%20%E2%80%93%20Software%20Implementation%20%26%20Testing%20Report.pdf?raw=true)
 
