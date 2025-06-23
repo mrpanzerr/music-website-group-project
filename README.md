@@ -82,3 +82,11 @@ To contribute:
 3. Make changes and commit them (git commit -am 'Add new feature').
 4. Push to your branch (git push origin feature-branch).
 5. Create a new Pull Request.
+
+## Reports
+Additional information about the creation of the project and media can be found here.
+
+Implementation Presentation: [Presentation](https://github.com/mrpanzerr/music-website-group-project/blob/main/docs/Implementation%20Presentation.pdf)
+
+Implementation Report: [Report](https://github.com/mrpanzerr/music-website-group-project/blob/main/docs/PlayBack%20%E2%80%93%20Software%20Implementation%20%26%20Testing%20Report.pdf)
+
